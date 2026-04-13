@@ -62,48 +62,24 @@ type ModelType = 'language' | 'embedding' | 'text_to_speech' | 'speech_to_text'
 // Provider display names
 const PROVIDER_DISPLAY_NAMES: Record<string, string> = {
   openai: 'OpenAI',
-  anthropic: 'Anthropic',
   google: 'Google AI',
-  groq: 'Groq',
-  mistral: 'Mistral AI',
-  deepseek: 'DeepSeek',
-  xai: 'xAI (Grok)',
-  openrouter: 'OpenRouter',
-  voyage: 'Voyage AI',
   elevenlabs: 'ElevenLabs',
   ollama: 'Ollama',
-  azure: 'Azure OpenAI',
-  vertex: 'Google Vertex AI',
-  openai_compatible: 'OpenAI Compatible',
-  dashscope: 'DashScope (Qwen)',
-  minimax: 'MiniMax',
+  local: 'Local (ViT5/PhoBERT)',
 }
 
 // All providers in display order
 const ALL_PROVIDERS = [
-  'openai', 'anthropic', 'google', 'groq', 'mistral', 'deepseek',
-  'xai', 'openrouter', 'dashscope', 'minimax', 'voyage', 'elevenlabs', 'ollama',
-  'azure', 'vertex', 'openai_compatible',
+  'openai', 'google', 'elevenlabs', 'ollama', 'local',
 ]
 
 // Default modalities per provider
 const PROVIDER_MODALITIES: Record<string, ModelType[]> = {
   openai: ['language', 'embedding', 'text_to_speech', 'speech_to_text'],
-  anthropic: ['language'],
   google: ['language', 'embedding', 'text_to_speech', 'speech_to_text'],
-  groq: ['language', 'speech_to_text'],
-  mistral: ['language', 'embedding'],
-  deepseek: ['language'],
-  xai: ['language'],
-  openrouter: ['language', 'embedding'],
-  voyage: ['embedding'],
   elevenlabs: ['text_to_speech', 'speech_to_text'],
   ollama: ['language', 'embedding'],
-  azure: ['language', 'embedding', 'text_to_speech', 'speech_to_text'],
-  vertex: ['language', 'embedding', 'text_to_speech'],
-  openai_compatible: ['language', 'embedding', 'text_to_speech', 'speech_to_text'],
-  dashscope: ['language'],
-  minimax: ['language'],
+  local: ['language'],
 }
 
 // Documentation links

@@ -1,0 +1,4 @@
+
+-- Migration 17 Down: Remove local models from selection
+
+DELETE FROM model WHERE provider = "local";

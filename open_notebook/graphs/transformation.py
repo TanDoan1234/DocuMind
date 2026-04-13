@@ -40,6 +40,7 @@ async def run_transformation(state: dict, config: RunnableConfig) -> dict:
         system_prompt = Prompter(template_text=transformation_template_text).render(
             data=state
         )
+        
         content_str = str(content) if content else ""
         payload = [SystemMessage(content=system_prompt), HumanMessage(content=content_str)]
         chain = await provision_langchain_model(

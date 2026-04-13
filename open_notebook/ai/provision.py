@@ -7,6 +7,8 @@ from open_notebook.exceptions import ConfigurationError
 from open_notebook.utils import token_count
 
 
+from open_notebook.ai.vi_langchain import VietnameseSummarizerChatModel, VietnameseQAChatModel
+
 async def provision_langchain_model(
     content, model_id, default_type, **kwargs
 ) -> BaseChatModel:
@@ -16,6 +18,14 @@ async def provision_langchain_model(
     If model_id is specified in Config, returns that model
     Otherwise, returns the default model for the given type
     """
+    # Intercept Vietnamese local models
+    if model_id == "vi-vit5":
+        logger.info("Provisioning local Vietnamese ViT5 Summarizer")
+        return VietnameseSummarizerChatModel()
+    elif model_id == "vi-mrc-qa":
+        logger.info("Provisioning local Vietnamese PhoBERT MRC QA")
+        return VietnameseQAChatModel()
+
     tokens = token_count(content)
     model = None
     selection_reason = ""

@@ -33,35 +33,12 @@ class DiscoveredModel:
 # =============================================================================
 # These mappings help classify models by their capabilities based on naming patterns
 
+# Selected models for discovery
 OPENAI_MODEL_TYPES = {
-    "language": [
-        "gpt-4",
-        "gpt-3.5",
-        "o1",
-        "o3",
-        "chatgpt",
-        "text-davinci",
-        "davinci",
-        "curie",
-        "babbage",
-        "ada",
-    ],
+    "language": ["gpt-4", "gpt-3.5", "o1", "o3", "chatgpt"],
     "embedding": ["text-embedding", "embedding"],
     "speech_to_text": ["whisper"],
     "text_to_speech": ["tts"],
-}
-
-ANTHROPIC_MODELS = {
-    # Static list since Anthropic doesn't have a model listing API
-    "language": [
-        "claude-opus-4-20250514",
-        "claude-sonnet-4-20250514",
-        "claude-3-5-sonnet-20241022",
-        "claude-3-5-haiku-20241022",
-        "claude-3-opus-20240229",
-        "claude-3-sonnet-20240229",
-        "claude-3-haiku-20240307",
-    ],
 }
 
 GOOGLE_MODEL_TYPES = {
@@ -70,73 +47,16 @@ GOOGLE_MODEL_TYPES = {
 }
 
 OLLAMA_MODEL_TYPES = {
-    # Ollama models can do multiple things, classify by common names
-    "language": [
-        "llama",
-        "mistral",
-        "mixtral",
-        "codellama",
-        "phi",
-        "gemma",
-        "qwen",
-        "deepseek",
-        "vicuna",
-        "falcon",
-        "orca",
-        "neural",
-        "dolphin",
-        "openchat",
-        "starling",
-        "solar",
-        "yi",
-        "nous",
-        "wizard",
-        "zephyr",
-        "tinyllama",
-    ],
+    "language": ["llama", "mistral", "mixtral", "phi", "gemma", "qwen", "deepseek"],
     "embedding": ["nomic-embed", "mxbai-embed", "all-minilm", "bge-", "e5-"],
-}
-
-MISTRAL_MODEL_TYPES = {
-    "language": [
-        "mistral",
-        "mixtral",
-        "codestral",
-        "ministral",
-        "pixtral",
-        "open-mistral",
-        "open-mixtral",
-    ],
-    "embedding": ["mistral-embed"],
-}
-
-GROQ_MODEL_TYPES = {
-    "language": ["llama", "mixtral", "gemma", "whisper"],
-    "speech_to_text": ["whisper"],
-}
-
-DEEPSEEK_MODEL_TYPES = {
-    "language": ["deepseek-chat", "deepseek-reasoner", "deepseek-coder"],
-}
-
-XAI_MODEL_TYPES = {
-    "language": ["grok"],
-}
-
-VOYAGE_MODEL_TYPES = {
-    "embedding": ["voyage"],
 }
 
 ELEVENLABS_MODEL_TYPES = {
     "text_to_speech": ["eleven"],
 }
 
-DASHSCOPE_MODEL_TYPES = {
-    "language": ["qwen"],
-}
-
-MINIMAX_MODEL_TYPES = {
-    "language": ["minimax", "abab"],
+LOCAL_MODEL_TYPES = {
+    "language": ["vi-vit5", "vi-mrc-qa"],
 }
 
 
@@ -152,14 +72,8 @@ def classify_model_type(model_name: str, provider: str) -> str:
         "openai": OPENAI_MODEL_TYPES,
         "google": GOOGLE_MODEL_TYPES,
         "ollama": OLLAMA_MODEL_TYPES,
-        "mistral": MISTRAL_MODEL_TYPES,
-        "groq": GROQ_MODEL_TYPES,
-        "deepseek": DEEPSEEK_MODEL_TYPES,
-        "xai": XAI_MODEL_TYPES,
-        "voyage": VOYAGE_MODEL_TYPES,
         "elevenlabs": ELEVENLABS_MODEL_TYPES,
-        "dashscope": DASHSCOPE_MODEL_TYPES,
-        "minimax": MINIMAX_MODEL_TYPES,
+        "local": LOCAL_MODEL_TYPES,
     }
 
     mapping = type_mappings.get(provider, {})
@@ -528,6 +442,14 @@ async def discover_elevenlabs_models() -> List[DiscoveredModel]:
     ]
 
 
+async def discover_local_models() -> List[DiscoveredModel]:
+    """Return list of supported local Vietnamese models."""
+    return [
+        DiscoveredModel(name="vi-vit5", provider="local", model_type="language"),
+        DiscoveredModel(name="vi-mrc-qa", provider="local", model_type="language"),
+    ]
+
+
 async def discover_dashscope_models() -> List[DiscoveredModel]:
     """Fetch available models from DashScope (Qwen) API."""
     api_key = os.environ.get("DASHSCOPE_API_KEY")
@@ -667,21 +589,10 @@ async def discover_openai_compatible_models() -> List[DiscoveredModel]:
 # Map provider names to their discovery functions
 PROVIDER_DISCOVERY_FUNCTIONS = {
     "openai": discover_openai_models,
-    "anthropic": discover_anthropic_models,
     "google": discover_google_models,
     "ollama": discover_ollama_models,
-    "groq": discover_groq_models,
-    "mistral": discover_mistral_models,
-    "deepseek": discover_deepseek_models,
-    "xai": discover_xai_models,
-    "openrouter": discover_openrouter_models,
-    "voyage": discover_voyage_models,
     "elevenlabs": discover_elevenlabs_models,
-    "openai_compatible": discover_openai_compatible_models,
-    "dashscope": discover_dashscope_models,
-    "minimax": discover_minimax_models,
-    "azure": None,  # Azure requires credential-based discovery (different auth)
-    "vertex": None,  # Vertex requires credential-based discovery (service account)
+    "local": discover_local_models,
 }
 
 

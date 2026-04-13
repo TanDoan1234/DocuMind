@@ -10,6 +10,8 @@ import {
 import { Languages } from 'lucide-react'
 import { useTranslation } from '@/lib/hooks/use-translation'
 
+import { languages } from '@/lib/locales'
+
 interface LanguageToggleProps {
   iconOnly?: boolean
 }
@@ -34,54 +36,15 @@ export function LanguageToggle({ iconOnly = false }: LanguageToggleProps) {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
-        <DropdownMenuItem 
-          onClick={() => setLanguage('en-US')}
-          className={currentLang === 'en-US' || currentLang.startsWith('en') ? 'bg-accent' : ''}
-        >
-          <span>{t.common.english}</span>
-        </DropdownMenuItem>
-        <DropdownMenuItem 
-          onClick={() => setLanguage('zh-CN')}
-          className={currentLang === 'zh-CN' || currentLang.startsWith('zh-Hans') || currentLang === 'zh' ? 'bg-accent' : ''}
-        >
-          <span>{t.common.chinese}</span>
-        </DropdownMenuItem>
-        <DropdownMenuItem
-          onClick={() => setLanguage('zh-TW')}
-          className={currentLang === 'zh-TW' || currentLang.startsWith('zh-Hant') ? 'bg-accent' : ''}
-        >
-          <span>{t.common.traditionalChinese}</span>
-        </DropdownMenuItem>
-        <DropdownMenuItem
-          onClick={() => setLanguage('pt-BR')}
-          className={currentLang === 'pt-BR' || currentLang.startsWith('pt') ? 'bg-accent' : ''}
-        >
-          <span>{t.common.portuguese}</span>
-        </DropdownMenuItem>
-        <DropdownMenuItem
-          onClick={() => setLanguage('ja-JP')}
-          className={currentLang === 'ja-JP' || currentLang.startsWith('ja') ? 'bg-accent' : ''}
-        >
-          <span>{t.common.japanese}</span>
-        </DropdownMenuItem>
-        <DropdownMenuItem
-          onClick={() => setLanguage('fr-FR')}
-          className={currentLang === 'fr-FR' || currentLang.startsWith('fr') ? 'bg-accent' : ''}
-        >
-          <span>{t.common.french}</span>
-        </DropdownMenuItem>
-        <DropdownMenuItem
-          onClick={() => setLanguage('ru-RU')}
-          className={currentLang === 'ru-RU' || currentLang.startsWith('ru') ? 'bg-accent' : ''}
-        >
-          <span>{t.common.russian}</span>
-        </DropdownMenuItem>
-        <DropdownMenuItem
-          onClick={() => setLanguage('bn-IN')}
-          className={currentLang === 'bn-IN' || currentLang.startsWith('bn') ? 'bg-accent' : ''}
-        >
-          <span>{t.common.bengali}</span>
-        </DropdownMenuItem>
+        {languages.map((lang) => (
+          <DropdownMenuItem 
+            key={lang.code}
+            onClick={() => setLanguage(lang.code)}
+            className={currentLang === lang.code ? 'bg-accent' : ''}
+          >
+            <span>{lang.label}</span>
+          </DropdownMenuItem>
+        ))}
       </DropdownMenuContent>
     </DropdownMenu>
   )

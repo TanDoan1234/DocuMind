@@ -1,9 +1,9 @@
 [project]
-name = "open-notebook"
+name = "documind"
 version = "1.8.4"
-description = "An open source implementation of a research assistant, inspired by Google Notebook LM"
+description = "DocuMind - Trợ lý nghiên cứu văn bản tiếng Việt thông minh"
 authors = [
-    {name = "Luis Novo", email = "lfnovo@gmail.com"}
+    {name = "Tân Đoàn", email = "doanminhtan.dev@gmail.com"}
 ]
 readme = "README.md"
 classifiers = [
@@ -41,6 +41,11 @@ dependencies = [
     "numpy>=2.4.1",
     "pycountry>=26.2.16",
     "babel>=2.18.0",
+    "transformers>=5.5.4",
+    "torch>=2.11.0",
+    "sentencepiece>=0.2.1",
+    "underthesea>=9.4.0",
+    "pyvi>=0.1.1",
 ]
 
 [tool.setuptools]
