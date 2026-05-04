@@ -152,3 +152,5 @@ ai/wandb/
 
 # Scratch/Temp
 scratch/
+
+.python-version
