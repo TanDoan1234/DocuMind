@@ -123,7 +123,7 @@ class OnboardingScreen extends StatelessWidget {
           style: GoogleFonts.inter(
             fontSize: 16,
             height: 1.5,
-            color: AppColors.textDark.withOpacity(0.6),
+            color: AppColors.textDark.withValues(alpha: 0.6),
           ),
         ),
       ],

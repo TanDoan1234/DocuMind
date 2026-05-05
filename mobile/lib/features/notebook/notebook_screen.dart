@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:documind_mobile/core/app_colors.dart';
+import 'package:documind_mobile/features/notebook/create_notebook_screen.dart';
 
 class NotebookScreen extends StatefulWidget {
   const NotebookScreen({super.key});
@@ -96,7 +97,12 @@ class _NotebookScreenState extends State<NotebookScreen> {
         ),
         IconButton(
           icon: const Icon(Icons.add_rounded, color: AppColors.textDark, size: 28),
-          onPressed: () {},
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const CreateNotebookScreen()),
+            );
+          },
         ),
         const SizedBox(width: 8),
       ],
@@ -117,7 +123,7 @@ class _NotebookScreenState extends State<NotebookScreen> {
               child: Container(
                 padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                 decoration: BoxDecoration(
-                  color: isSelected ? AppColors.primary.withOpacity(0.1) : Colors.transparent,
+                  color: isSelected ? AppColors.primary.withValues(alpha: 0.1) : Colors.transparent,
                   borderRadius: BorderRadius.circular(12),
                   border: Border.all(
                     color: isSelected ? AppColors.primary : Colors.grey.shade200,
@@ -150,7 +156,7 @@ class _NotebookScreenState extends State<NotebookScreen> {
         border: Border.all(color: Colors.grey.shade100, width: 1),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.02),
+            color: Colors.black.withValues(alpha: 0.02),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -224,7 +230,7 @@ class _NotebookScreenState extends State<NotebookScreen> {
       decoration: BoxDecoration(
         color: Colors.white,
         boxShadow: [
-          BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 20, offset: const Offset(0, -5))
+          BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 20, offset: const Offset(0, -5))
         ],
       ),
       child: Row(
@@ -243,7 +249,7 @@ class _NotebookScreenState extends State<NotebookScreen> {
                   shape: BoxShape.circle,
                   gradient: const LinearGradient(colors: [AppColors.primary, Color(0xFF4DB6AC)]),
                   boxShadow: [
-                    BoxShadow(color: AppColors.primary.withOpacity(0.3), blurRadius: 12, offset: const Offset(0, 4))
+                    BoxShadow(color: AppColors.primary.withValues(alpha: 0.3), blurRadius: 12, offset: const Offset(0, 4))
                   ],
                 ),
                 child: Center(
@@ -268,7 +274,14 @@ class _NotebookScreenState extends State<NotebookScreen> {
   Widget _buildNavItem(int index, String iconPath, String label) {
     bool isActive = _currentIndex == index;
     return GestureDetector(
-      onTap: () => setState(() => _currentIndex = index),
+      onTap: () {
+        if (index == 0) {
+          // Quay về Trang chủ
+          Navigator.pop(context);
+        } else {
+          setState(() => _currentIndex = index);
+        }
+      },
       behavior: HitTestBehavior.opaque,
       child: Column(
         mainAxisSize: MainAxisSize.min,

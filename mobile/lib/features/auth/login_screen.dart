@@ -90,7 +90,7 @@ class _LoginScreenState extends State<LoginScreen> {
       children: [
         Text("Đăng nhập", style: GoogleFonts.outfit(fontSize: 32, fontWeight: FontWeight.bold, color: AppColors.textDark)),
         const SizedBox(height: 4),
-        Text("Chào mừng bạn quay lại", style: GoogleFonts.inter(fontSize: 16, color: AppColors.textDark.withOpacity(0.6))),
+        Text("Chào mừng bạn quay lại", style: GoogleFonts.inter(fontSize: 16, color: AppColors.textDark.withValues(alpha: 0.6))),
       ],
     );
   }

@@ -86,8 +86,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 text: TextSpan(
                   style: GoogleFonts.outfit(fontSize: 22, fontWeight: FontWeight.bold, color: AppColors.textDark),
                   children: const [
-                    TextSpan(text: "Chào bạn, "),
-                    TextSpan(text: "Linh!", style: TextStyle(color: AppColors.primary)),
+                    const TextSpan(text: "Chào bạn, "),
+                    const TextSpan(text: "Linh!", style: TextStyle(color: AppColors.primary)),
                   ],
                 ),
               ),
@@ -354,7 +354,7 @@ class _HomeScreenState extends State<HomeScreen> {
       decoration: BoxDecoration(
         color: Colors.white,
         boxShadow: [
-          BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 20, offset: const Offset(0, -5))
+          BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 20, offset: const Offset(0, -5))
         ],
       ),
       child: Row(
@@ -372,7 +372,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   shape: BoxShape.circle,
                   gradient: const LinearGradient(colors: [AppColors.primary, Color(0xFF4DB6AC)]),
                   boxShadow: [
-                    BoxShadow(color: AppColors.primary.withOpacity(0.3), blurRadius: 12, offset: const Offset(0, 4))
+                    BoxShadow(color: AppColors.primary.withValues(alpha: 0.3), blurRadius: 12, offset: const Offset(0, 4))
                   ],
                 ),
                 child: Center(
@@ -398,13 +398,14 @@ class _HomeScreenState extends State<HomeScreen> {
     bool isActive = _currentIndex == index;
     return GestureDetector(
       onTap: () {
-        setState(() => _currentIndex = index);
-        // Nếu ấn vào Sổ tay trên thanh Nav cũng điều hướng sang NotebookScreen
+        // Nếu ấn vào Sổ tay thì chỉ chuyển trang, không đổi Index của Home
         if (index == 1) {
           Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => const NotebookScreen()),
           );
+        } else {
+          setState(() => _currentIndex = index);
         }
       },
       behavior: HitTestBehavior.opaque,

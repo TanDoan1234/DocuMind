@@ -91,7 +91,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
       children: [
         Text("Đăng ký", style: GoogleFonts.outfit(fontSize: 30, fontWeight: FontWeight.bold, color: AppColors.textDark)),
         const SizedBox(height: 4),
-        Text("Tạo tài khoản để bắt đầu học tập thông minh", textAlign: TextAlign.center, style: GoogleFonts.inter(fontSize: 14, color: AppColors.textDark.withOpacity(0.6))),
+        Text("Tạo tài khoản mới để bắt đầu", style: GoogleFonts.inter(fontSize: 16, color: AppColors.textDark.withValues(alpha: 0.6))),
       ],
     );
   }
