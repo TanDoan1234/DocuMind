@@ -4,6 +4,7 @@ import 'package:documind_mobile/core/app_colors.dart';
 import 'package:documind_mobile/shared/widgets/atoms/primary_button.dart';
 import 'package:documind_mobile/shared/widgets/molecules/custom_text_field.dart';
 import 'register_screen.dart';
+import '../home/home_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -120,7 +121,15 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget _buildActionButtons() {
     return Column(
       children: [
-        PrimaryButton(text: "Đăng nhập", onPressed: () {}),
+        PrimaryButton(
+          text: "Đăng nhập",
+          onPressed: () {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => const HomeScreen()),
+            );
+          },
+        ),
         const SizedBox(height: 12),
         _buildSocialDivider(),
         const SizedBox(height: 12),
