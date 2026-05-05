@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:documind_mobile/core/app_colors.dart';
-import 'package:documind_mobile/features/notebook/notebook_screen.dart'; // Import màn hình Sổ tay
+import 'package:documind_mobile/features/notebook/notebook_screen.dart';
+import 'package:documind_mobile/features/notebook/notebook_detail_screen.dart';
+import 'package:documind_mobile/features/ai/ai_chat_screen.dart';
+import 'package:documind_mobile/features/ai/summary_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -256,12 +259,21 @@ class _HomeScreenState extends State<HomeScreen> {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: actions.map((item) {
         return Expanded(
-          child: Column(
-            children: [
-              Image.asset(item["icon"] as String, width: 72, height: 72, fit: BoxFit.contain),
-              const SizedBox(height: 6),
-              Text(item["label"] as String, style: GoogleFonts.inter(fontSize: 13, fontWeight: FontWeight.w600, color: AppColors.textDark)),
-            ],
+          child: GestureDetector(
+            onTap: () {
+              if (item["label"] == "Hỏi AI") {
+                Navigator.push(context, MaterialPageRoute(builder: (context) => const AIChatScreen()));
+              } else if (item["label"] == "Tóm tắt") {
+                Navigator.push(context, MaterialPageRoute(builder: (context) => const SummaryScreen()));
+              }
+            },
+            child: Column(
+              children: [
+                Image.asset(item["icon"] as String, width: 72, height: 72, fit: BoxFit.contain),
+                const SizedBox(height: 6),
+                Text(item["label"] as String, style: GoogleFonts.inter(fontSize: 13, fontWeight: FontWeight.w600, color: AppColors.textDark)),
+              ],
+            ),
           ),
         );
       }).toList(),
@@ -289,28 +301,40 @@ class _HomeScreenState extends State<HomeScreen> {
       itemCount: items.length,
       itemBuilder: (context, index) {
         final folder = items[index];
-        return Container(
-          padding: const EdgeInsets.symmetric(horizontal: 12),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(16),
-            border: Border.all(color: Colors.grey.shade100, width: 1),
-          ),
-          child: Row(
-            children: [
-              Image.asset(folder["icon"] as String, width: 44, height: 44, fit: BoxFit.contain),
-              const SizedBox(width: 10),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(folder["title"] as String, style: GoogleFonts.inter(fontSize: 14, fontWeight: FontWeight.bold, color: AppColors.textDark), overflow: TextOverflow.ellipsis),
-                    Text("${folder["count"]} ghi chú", style: GoogleFonts.inter(fontSize: 11, color: Colors.grey.shade500)),
-                  ],
+        return GestureDetector(
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => NotebookDetailScreen(
+                  notebookTitle: folder['title'] as String,
                 ),
               ),
-            ],
+            );
+          },
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(color: Colors.grey.shade100, width: 1),
+            ),
+            child: Row(
+              children: [
+                Image.asset(folder["icon"] as String, width: 44, height: 44, fit: BoxFit.contain),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(folder["title"] as String, style: GoogleFonts.inter(fontSize: 14, fontWeight: FontWeight.bold, color: AppColors.textDark), overflow: TextOverflow.ellipsis),
+                      Text("${folder["count"]} ghi chú", style: GoogleFonts.inter(fontSize: 11, color: Colors.grey.shade500)),
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
         );
       },

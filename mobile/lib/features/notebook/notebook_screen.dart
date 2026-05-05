@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:documind_mobile/core/app_colors.dart';
 import 'package:documind_mobile/features/notebook/create_notebook_screen.dart';
+import 'package:documind_mobile/features/notebook/notebook_detail_screen.dart';
 
 class NotebookScreen extends StatefulWidget {
   const NotebookScreen({super.key});
@@ -147,79 +148,92 @@ class _NotebookScreenState extends State<NotebookScreen> {
   }
 
   Widget _buildNotebookCard(Map<String, dynamic> notebook) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 20),
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: Colors.grey.shade100, width: 1),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.02),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center, // Căn giữa icon và text
-        children: [
-          // Icon Box
-          Container(
-            width: 100,
-            height: 100,
-            decoration: BoxDecoration(
-              color: notebook["color"],
-              borderRadius: BorderRadius.circular(20),
-            ),
-            child: Center(
-              child: Image.asset(notebook["icon"], width: 60, height: 60, fit: BoxFit.contain),
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => NotebookDetailScreen(
+              notebookTitle: notebook['title'],
+              themeColor: notebook['color'],
             ),
           ),
-          const SizedBox(width: 16),
-          // Content
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      notebook["title"],
-                      style: GoogleFonts.outfit(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.textDark),
-                    ),
-                    const Icon(Icons.more_horiz_rounded, color: Colors.grey),
-                  ],
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  "${notebook["count"]} ghi chú",
-                  style: GoogleFonts.inter(fontSize: 14, color: Colors.grey.shade500),
-                ),
-                const SizedBox(height: 12),
-                Text(
-                  notebook["desc"],
-                  style: GoogleFonts.inter(fontSize: 13, color: Colors.grey.shade400, height: 1.4),
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                ),
-                const SizedBox(height: 12),
-                Row(
-                  children: [
-                    const Icon(Icons.person_outline_rounded, size: 14, color: Colors.grey),
-                    const SizedBox(width: 4),
-                    Text(
-                      notebook["status"],
-                      style: GoogleFonts.inter(fontSize: 12, color: Colors.grey.shade500),
-                    ),
-                  ],
-                ),
-              ],
+        );
+      },
+      child: Container(
+        margin: const EdgeInsets.only(bottom: 20),
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(24),
+          border: Border.all(color: Colors.grey.shade100, width: 1),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.02),
+              blurRadius: 10,
+              offset: const Offset(0, 4),
             ),
-          ),
-        ],
+          ],
+        ),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            // Icon Box
+            Container(
+              width: 100,
+              height: 100,
+              decoration: BoxDecoration(
+                color: notebook["color"],
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: Center(
+                child: Image.asset(notebook["icon"], width: 60, height: 60, fit: BoxFit.contain),
+              ),
+            ),
+            const SizedBox(width: 16),
+            // Content
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        notebook["title"],
+                        style: GoogleFonts.outfit(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.textDark),
+                      ),
+                      const Icon(Icons.more_horiz_rounded, color: Colors.grey),
+                    ],
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    "${notebook["count"]} ghi chú",
+                    style: GoogleFonts.inter(fontSize: 14, color: Colors.grey.shade500),
+                  ),
+                  const SizedBox(height: 12),
+                  Text(
+                    notebook["desc"],
+                    style: GoogleFonts.inter(fontSize: 13, color: Colors.grey.shade400, height: 1.4),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  const SizedBox(height: 12),
+                  Row(
+                    children: [
+                      const Icon(Icons.person_outline_rounded, size: 14, color: Colors.grey),
+                      const SizedBox(width: 4),
+                      Text(
+                        notebook["status"],
+                        style: GoogleFonts.inter(fontSize: 12, color: Colors.grey.shade500),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
