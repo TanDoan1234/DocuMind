@@ -41,46 +41,38 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       Clip.none, // Allows decor to overflow the flex box
                   alignment: Alignment.center,
                   children: [
-                    // Extra Large Clouds
+                    // Extra Large Clouds - Spread out to corners
                     Positioned(
-                      left: -90,
-                      top: -10,
+                      left: -120,
+                      top: -30,
                       child: Opacity(
                         opacity: 0.3,
-                        child: Image.asset(
-                            "assets/decor/clouds/decor-cloud-mint-01.png",
-                            width: 180),
+                        child: Image.asset("assets/decor/clouds/decor-cloud-mint-01.png", width: 200),
                       ),
                     ),
                     Positioned(
-                      right: -80,
-                      bottom: -10,
+                      right: -110,
+                      bottom: -20,
                       child: Opacity(
                         opacity: 0.2,
-                        child: Image.asset(
-                            "assets/decor/clouds/decor-cloud-mint-01.png",
-                            width: 160),
+                        child: Image.asset("assets/decor/clouds/decor-cloud-mint-01.png", width: 180),
                       ),
                     ),
-                    // Extra Large Botanical
+                    // Extra Large Botanical - Spread out to opposite corners
                     Positioned(
-                      left: -70, // Pushed further out
-                      top: 10,
-                      child: Transform.rotate(
-                        angle: -0.5,
-                        child: Image.asset(
-                            "assets/decor/botanical/decor-leaf-double-01.png",
-                            width: 140),
-                      ),
-                    ),
-                    Positioned(
-                      right: -60, // Pushed further out
+                      left: -80,
                       bottom: 20,
                       child: Transform.rotate(
-                        angle: 0.3,
-                        child: Image.asset(
-                            "assets/decor/botanical/decor-leaf-sprig-02.png",
-                            width: 130),
+                        angle: -0.6,
+                        child: Image.asset("assets/decor/botanical/decor-leaf-double-01.png", width: 150),
+                      ),
+                    ),
+                    Positioned(
+                      right: -70,
+                      top: 40,
+                      child: Transform.rotate(
+                        angle: 0.4,
+                        child: Image.asset("assets/decor/botanical/decor-leaf-sprig-02.png", width: 140),
                       ),
                     ),
                     // Mascot
