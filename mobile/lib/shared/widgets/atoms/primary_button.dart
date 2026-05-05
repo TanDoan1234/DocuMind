@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:documind_mobile/core/app_colors.dart';
 
-/// Một Atom đại diện cho nút bấm chính (Primary Button) của ứng dụng.
+
 class PrimaryButton extends StatelessWidget {
   final String text;
   final VoidCallback onPressed;

@@ -22,7 +22,7 @@ class ProfileScreen extends StatelessWidget {
               _buildStatsGrid(),
               const SizedBox(height: 16),
               _buildMenuSection(context),
-              const SizedBox(height: 100), // Space for bottom nav
+              const SizedBox(height: 100),
             ],
           ),
         ),

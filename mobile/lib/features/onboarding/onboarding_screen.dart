@@ -4,8 +4,7 @@ import 'package:documind_mobile/core/app_colors.dart';
 import 'package:documind_mobile/shared/widgets/atoms/primary_button.dart';
 import '../auth/login_screen.dart';
 
-/// Màn hình giới thiệu (Onboarding) của DocuMind.
-/// Điểm chạm đầu tiên với người dùng, sử dụng phong cách thiết kế organic.
+
 class OnboardingScreen extends StatelessWidget {
   const OnboardingScreen({super.key});
 
@@ -21,17 +20,14 @@ class OnboardingScreen extends StatelessWidget {
             children: [
               const Spacer(flex: 2),
 
-              // 1. Hình ảnh minh họa & Linh vật (Illustration Section)
               _buildIllustrationSection(),
 
               const Spacer(flex: 1),
 
-              // 2. Nội dung giới thiệu (Content Section)
               _buildContentSection(),
 
               const Spacer(flex: 2),
 
-              // 3. Nút bấm bắt đầu (Action Section)
               _buildActionSection(context),
 
               const SizedBox(height: 40),
@@ -42,15 +38,15 @@ class OnboardingScreen extends StatelessWidget {
     );
   }
 
-  /// Khu vực minh họa với các assets bay bổng
+
   Widget _buildIllustrationSection() {
     return SizedBox(
       height: 360,
       child: Stack(
-        clipBehavior: Clip.none, // Quy tắc cứng: Không cắt decor overflow
+        clipBehavior: Clip.none,
         alignment: Alignment.center,
         children: [
-          // Clouds - Phóng to & Tỏa ra
+          
           Positioned(
             left: -80,
             top: 10,
@@ -67,7 +63,7 @@ class OnboardingScreen extends StatelessWidget {
               child: Image.asset("assets/decor/clouds/decor-cloud-mint-01.png", width: 200),
             ),
           ),
-          // Botanical - Nhành lá organic
+          
           Positioned(
             left: -40,
             bottom: 40,
@@ -84,7 +80,7 @@ class OnboardingScreen extends StatelessWidget {
               child: Image.asset("assets/decor/botanical/decor-leaf-sprig-02.png", width: 110),
             ),
           ),
-          // Mascot chính (Reading on books)
+          
           Image.asset(
             "assets/mascot/mascot-owl-reading-on-books.png",
             width: 320,
@@ -95,7 +91,7 @@ class OnboardingScreen extends StatelessWidget {
     );
   }
 
-  /// Phần văn bản giới thiệu
+
   Widget _buildContentSection() {
     return Column(
       children: [
@@ -130,7 +126,7 @@ class OnboardingScreen extends StatelessWidget {
     );
   }
 
-  /// Nút bấm chuyển hướng sang Login
+
   Widget _buildActionSection(BuildContext context) {
     return PrimaryButton(
       text: "Bắt đầu",

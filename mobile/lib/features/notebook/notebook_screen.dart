@@ -12,7 +12,7 @@ class NotebookScreen extends StatefulWidget {
 }
 
 class _NotebookScreenState extends State<NotebookScreen> {
-  int _currentIndex = 1; // Tab Sổ tay đang active
+  int _currentIndex = 1;
   String _selectedFilter = "Tất cả";
 
   final List<String> _filters = ["Tất cả", "Học tập", "Dự án", "Nghiên cứu", "Cá nhân"];
@@ -178,7 +178,7 @@ class _NotebookScreenState extends State<NotebookScreen> {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            // Icon Box
+            
             Container(
               width: 100,
               height: 100,
@@ -191,7 +191,7 @@ class _NotebookScreenState extends State<NotebookScreen> {
               ),
             ),
             const SizedBox(width: 16),
-            // Content
+            
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -253,7 +253,7 @@ class _NotebookScreenState extends State<NotebookScreen> {
           Expanded(child: _buildNavItem(0, "assets/icons/navigations/icon-nav-home-outline.png", "Trang chủ")),
           Expanded(child: _buildNavItem(1, "assets/icons/navigations/icon-nav-notebook-outline.png", "Số tay")),
           
-          // NÚT PLUS
+          
           Expanded(
             child: Center(
               child: Container(
@@ -290,7 +290,7 @@ class _NotebookScreenState extends State<NotebookScreen> {
     return GestureDetector(
       onTap: () {
         if (index == 0) {
-          // Quay về Trang chủ
+          
           Navigator.pop(context);
         } else {
           setState(() => _currentIndex = index);

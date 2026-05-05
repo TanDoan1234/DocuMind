@@ -422,11 +422,9 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget _buildNavItem(int index, String iconPath, String label) {
     bool isActive = _currentIndex == index;
-    // Không chuyển sang filled cho icon Trang chủ (index 0)
     String finalIconPath = (isActive && index != 0) ? iconPath.replaceAll("outline", "filled") : iconPath;
     return GestureDetector(
       onTap: () {
-        // Nếu ấn vào Sổ tay thì chỉ chuyển trang, không đổi Index của Home
         if (index == 1) {
           Navigator.push(
             context,

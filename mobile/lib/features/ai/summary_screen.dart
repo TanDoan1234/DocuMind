@@ -72,7 +72,7 @@ class SummaryScreen extends StatelessWidget {
                       _buildNumberedPoint("1", "Định luật I: Quán tính"),
                       _buildNumberedPoint("2", "Định luật II: F = m.a"),
                       _buildNumberedPoint("3", "Định luật III: Tác dụng và phản tác dụng"),
-                      const SizedBox(height: 60), // Increased space for mascot
+                      const SizedBox(height: 60),
                     ],
                   ),
                   color: const Color(0xFFE8F5E9),

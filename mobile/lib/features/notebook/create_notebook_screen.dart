@@ -23,11 +23,11 @@ class _CreateNotebookScreenState extends State<CreateNotebookScreen> {
   ];
 
   final List<Color> _colors = [
-    const Color(0xFF80CBC4), // Mint
-    const Color(0xFFBBDEFB), // Blue
-    const Color(0xFFFFE0B2), // Orange
-    const Color(0xFFF8BBD0), // Pink
-    const Color(0xFFE1BEE7), // Purple
+    const Color(0xFF80CBC4),
+    const Color(0xFFBBDEFB),
+    const Color(0xFFFFE0B2),
+    const Color(0xFFF8BBD0),
+    const Color(0xFFE1BEE7),
   ];
 
   @override
@@ -92,7 +92,7 @@ class _CreateNotebookScreenState extends State<CreateNotebookScreen> {
       child: Stack(
         clipBehavior: Clip.none,
         children: [
-          // Background Container
+          
           Positioned.fill(
             child: Container(
               padding: const EdgeInsets.only(left: 160, right: 20, top: 24, bottom: 24),
@@ -117,7 +117,7 @@ class _CreateNotebookScreenState extends State<CreateNotebookScreen> {
               ),
             ),
           ),
-          // Enlarged and Centered Mascot
+          
           Positioned(
             left: -25,
             top: 0,
@@ -355,7 +355,7 @@ class _CreateNotebookScreenState extends State<CreateNotebookScreen> {
           _buildNavItem(0, "assets/icons/navigations/icon-nav-home-outline.png", "Trang chủ"),
           _buildNavItem(1, "assets/icons/navigations/icon-nav-notebook-outline.png", "Số tay"),
           
-          // NÚT PLUS
+          
           Center(
             child: Container(
               width: 60,
@@ -386,14 +386,14 @@ class _CreateNotebookScreenState extends State<CreateNotebookScreen> {
   }
 
   Widget _buildNavItem(int index, String iconPath, String label) {
-    bool isActive = index == 1; // Giả định Tab Sổ tay đang active
+    bool isActive = index == 1;
     return GestureDetector(
       onTap: () {
         if (index == 0) {
-          // Quay về Trang chủ (Pop 2 lần: khỏi Create và khỏi Notebook List)
+          
           Navigator.of(context).popUntil((route) => route.isFirst);
         } else if (index == 1) {
-          // Quay về Danh sách sổ tay
+          
           Navigator.pop(context);
         }
       },

@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:documind_mobile/core/app_colors.dart';
 
-/// Một Molecule đại diện cho ô nhập liệu chuẩn của DocuMind.
-/// Có thể tùy chỉnh Icon, Gợi ý và chế độ Mật khẩu.
+
 class CustomTextField extends StatelessWidget {
   final String hint;
   final IconData icon;
