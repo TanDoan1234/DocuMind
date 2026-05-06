@@ -1,14 +1,27 @@
-from docling.document_converter import DocumentConverter
+from docling.document_converter import DocumentConverter, PdfFormatOption
+from docling.datamodel.base_models import InputFormat
+from docling.datamodel.pipeline_options import PdfPipelineOptions
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from typing import List, Dict, Any
 import os
 
 class DocumentProcessor:
-    def __init__(self, chunk_size: int = 1000, chunk_overlap: int = 100):
-        # Khởi tạo bộ chuyển đổi của Docling
-        self.converter = DocumentConverter()
+    def __init__(self, chunk_size: int = 1000, chunk_overlap: int = 100, do_ocr: bool = False):
+        # 1. Cấu hình Pipeline cho PDF
+        pipeline_options = PdfPipelineOptions()
+        pipeline_options.do_ocr = do_ocr  # Tắt OCR để tăng tốc độ
         
-        # Khởi tạo bộ cắt văn bản (Dùng sau khi Docling xuất ra Markdown)
+        # 2. Thiết lập Format Options (Chỉ định rõ cấu hình cho file PDF)
+        format_options = {
+            InputFormat.PDF: PdfFormatOption(pipeline_options=pipeline_options)
+        }
+        
+        # 3. Khởi tạo bộ chuyển đổi với format_options
+        self.converter = DocumentConverter(
+            format_options=format_options
+        )
+        
+        # 4. Khởi tạo bộ cắt văn bản
         self.text_splitter = RecursiveCharacterTextSplitter(
             chunk_size=chunk_size,
             chunk_overlap=chunk_overlap,
@@ -18,9 +31,8 @@ class DocumentProcessor:
     def process_document(self, file_path: str) -> List[Dict[str, Any]]:
         """
         Quy trình xử lý bằng Docling:
-        1. Chuyển đổi tài liệu (PDF/Docx/PPTX) sang cấu trúc Docling.
-        2. Xuất bản sang định dạng Markdown (để giữ cấu trúc bảng, tiêu đề).
-        3. Cắt nhỏ (Chunking) văn bản Markdown.
+        1. Chuyển đổi tài liệu sang định dạng Markdown.
+        2. Cắt nhỏ (Chunking) văn bản Markdown.
         """
         if not os.path.exists(file_path):
             raise FileNotFoundError(f"Không tìm thấy file: {file_path}")
@@ -32,7 +44,6 @@ class DocumentProcessor:
         markdown_content = result.document.export_to_markdown()
         
         # Bước 3: Cắt nhỏ nội dung Markdown
-        # Markdown giúp AI hiểu rõ các phần tiêu đề và bảng hơn text thô
         chunks_text = self.text_splitter.split_text(markdown_content)
         
         processed_chunks = []
@@ -50,7 +61,5 @@ class DocumentProcessor:
 
 # Demo nhanh cách dùng
 if __name__ == "__main__":
-    # Ví dụ cách sử dụng (Cần cài đặt thư viện docling trước để chạy)
-    processor = DocumentProcessor()
-    print("Docling Processor initialized successfully.")
-    print("Ready to process PDF, Docx, and more with high accuracy.")
+    processor = DocumentProcessor(do_ocr=False)
+    print("Docling Processor initialized successfully (Corrected Config).")
