@@ -13,7 +13,10 @@
   <img src="https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white" alt="Python" />
 </p>
 
-<!-- Contact section: centered, single row of badges, short intro -->
+<div align="center">
+  <p>🌍 <b><a href="./README_VN.md">Vietnamese Version</a></b></p>
+</div>
+
 <div align="center">
 
 <!-- HEADER BANNER -->
@@ -28,10 +31,7 @@
 
 <br/>
 
-
 </div>
-
-
 
 <p align="center">
   <img src="./assets/thumbnail.png" alt="Project thumbnail" width="600">
@@ -59,14 +59,13 @@
 
 <p align="center"><i>And more features like Settings, Notifications...</i></p>
 
-
 ---
 
 ## Student information
 
-| Student ID | Full name        | GitHub                                  | Email                  |
+| Student ID | Full name | GitHub | Email |
 |:----------:|------------------|-----------------------------------------|------------------------|
-| 2001230791   | Doan Tan Minh Tan | [TanDoan1234](https://github.com/TanDoan1234) | doanminhtan.dev@gmail.com |
+| 2001230791 | Doan Tan Minh Tan | [TanDoan1234](https://github.com/TanDoan1234) | doanminhtan.dev@gmail.com |
 
 ---
 
@@ -76,44 +75,75 @@
 
 ---
 
-## Directory layout
+## 🧠 AI & Deep Learning Stack
+
+The project applies state-of-the-art Deep Learning techniques to optimize Vietnamese document processing:
+
+- **Document Processing:** Uses [IBM Docling](https://github.com/DS4SD/docling) for advanced layout analysis and high-quality Markdown extraction from complex documents (PDF, Docx, Pptx).
+- **Text Embedding:** Uses the [Vietnamese-SBERT](https://huggingface.co/keepitreal/vietnamese-sbert) (768 dims) model for semantic vectorization, supporting accurate RAG search.
+- **Large Language Models (LLM):** 
+  - **Summarization:** [ViT5](https://huggingface.co/VietAI/vit5-base-vietnamese-summarization) model for automatic document summarization.
+  - **Question Answering:** Specialized ViT5 model for context-aware QA.
+
+---
+
+## 📂 Directory layout
 
 ```text
 DocuMind/
 ├── mobile/                      ← Flutter mobile application
-├── backend/                     ← Custom Backend API (FastAPI) & AI Logic
+├── backend/                     
+│   ├── processor/               ← AI Pipeline (Docling, Embedding, Summarizer)
+│   └── main.py                  ← FastAPI entry point
+├── tests/                       ← Backend & AI testing scripts
+├── ai/                          ← Pre-trained models and training results
 ├── assets/                      ← Project assets (logos, demo screenshots)
-├── docs/                        ← Documentation and architecture design
-├── pyproject.toml               ← Python project management (uv)
-└── README.md                    ← Project overview
+├── pyproject.toml               ← Dependency management (uv)
+└── README.md                    ← Project overview (English)
 ```
 
 ---
 
 ## 🛠️ Development Setup
 
-Dự án sử dụng **`uv`** để quản lý môi trường và thư viện Python.
+The project uses **`uv`** for extremely fast and consistent Python environment management.
 
 ### Prerequisites
-- Python 3.10+
+- Python 3.12+
 - [uv](https://docs.astral.sh/uv/getting-started/installation/)
+- Flutter SDK (for mobile)
 
-### Backend Setup
-1. Cài đặt các thư viện và khởi tạo môi trường ảo:
+### Backend Setup & Testing
+1. Install dependencies and sync the environment:
    ```bash
    uv sync
    ```
-2. Chạy server Backend (FastAPI):
+2. Run AI validation tests (Models will be downloaded on first run):
+   - **Document Processing:** `uv run python tests/test_docling_processor.py`
+   - **Semantic Similarity:** `uv run python tests/test_embedding_service.py`
+   - **Summarization:** `uv run python tests/test_summarization.py`
+   - **AI Question Answering:** `uv run python tests/test_qa.py`
+
+3. Start the main server:
    ```bash
    uv run python backend/main.py
    ```
 
 ### Mobile Setup
-1. Đảm bảo đã cài đặt Flutter SDK.
-2. Chạy ứng dụng:
+1. Run the application:
    ```bash
    cd mobile
    flutter run
    ```
+
+---
+
+## 📚 Documentation
+
+Detailed technical documentation can be found in the `docs/` directory:
+
+- **[AI Models Guide](./docs/en/AI_MODELS_GUIDE.md)**: Details on BARTpho, ViT5, PhoBERT, and more.
+- **[AI Directory Guide](./docs/en/AI_DIRECTORY_GUIDE.md)**: Understanding the `ai/` folder structure and research workflow.
+- **[System Architecture](./docs/en/ARCHITECTURE.md)**: Deep dive into the RAG pipeline and system design.
 
 ---
