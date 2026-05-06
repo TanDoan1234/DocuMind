@@ -8,7 +8,7 @@ from backend.processor.document_processor import DocumentProcessor
 
 def test_docling():
     # Đường dẫn tới file PDF mẫu
-    sample_pdf = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "truyenngan.pdf"))
+    sample_pdf = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "ANFIS.docx"))
     
     if not os.path.exists(sample_pdf):
         print(f"❌ Không tìm thấy file mẫu tại: {sample_pdf}")
@@ -31,6 +31,8 @@ def test_docling():
         for i, chunk in enumerate(chunks[:3]):
             print(f"\n--- Mảnh #{i+1} ---")
             print(f"Nguồn: {chunk['metadata']['source']}")
+            print(f"Kích thước vector: {len(chunk['embedding'])}")
+            print(f"Đầu vector (3 giá trị): {chunk['embedding'][:3]}...")
             print(f"Nội dung (định dạng Markdown):")
             print("-" * 20)
             print(chunk['content'])
