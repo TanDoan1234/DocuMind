@@ -1,6 +1,8 @@
 <div align="center">
-<img src="./assets/logo.png" alt="DocuMind Logo" width="250" />
-<h1>DOCUMIND</h1>
+<h1>
+  <img src="./assets/logo.png" alt="DocuMind Logo" width="350" /><br>
+  DOCUMIND
+</h1>
 
 ### Đồ Án Cuối Kỳ Deep Learning
 **IBM Docling • BARTpho & ViT5 • PhoBERT & XLM-RoBERTa • Sentence Transformers**
