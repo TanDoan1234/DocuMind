@@ -1,41 +1,48 @@
 <p align="center">
-  <a href="https://huit.edu.vn/" title="Ho Chi Minh City University of Industry and Trade">
-    <img src="./assets/Logo%20HUIT-03.png" alt="Ho Chi Minh City University of Industry and Trade (HUIT)" width="400">
-  </a>
+  <img src="./assets/logo.png" alt="DocuMind Logo" width="200">
 </p>
 
-<h1 align="center"><b>DEEP LEARNING FINAL PROJECT - DOCUMIND</b></h1>
+<h1 align="center">DOCUMIND</h1>
+<p align="center"><b>DEEP LEARNING FINAL PROJECT</b></p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/Flutter-02569B?style=for-the-badge&logo=flutter&logoColor=white" alt="Flutter" />
-  <img src="https://img.shields.io/badge/FastAPI-005571?style=for-the-badge&logo=fastapi&logoColor=white" alt="FastAPI" />
-  <img src="https://img.shields.io/badge/PostgreSQL-4169E1?style=for-the-badge&logo=postgresql&logoColor=white" alt="PostgreSQL" />
-  <img src="https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white" alt="Python" />
+  <img src="https://img.shields.io/badge/Flutter-3.24+-02569B?style=for-the-badge&logo=flutter&logoColor=white" alt="Flutter" />
+  <img src="https://img.shields.io/badge/FastAPI-Latest-005571?style=for-the-badge&logo=fastapi&logoColor=white" alt="FastAPI" />
+  <img src="https://img.shields.io/badge/Python-3.12+-3776AB?style=for-the-badge&logo=python&logoColor=white" alt="Python" />
+  <img src="https://img.shields.io/badge/License-MIT-4fb320?style=for-the-badge" alt="License" />
 </p>
+
+<p align="center">
+  <img src="https://img.shields.io/badge/Platform-iOS%20|%20Android%20|%20Web-9944FF?style=for-the-badge" alt="Platform" />
+  <img src="https://img.shields.io/badge/Stars-21-ffcc33?style=for-the-badge&logo=github&logoColor=white" alt="Stars" />
+</p>
+
+<p align="center">
+  <a href="#"><img src="https://img.shields.io/badge/Portfolio-667eea?style=for-the-badge&logo=vercel&logoColor=white" alt="Portfolio"></a>
+  <a href="https://www.linkedin.com/in/tandoanminh/"><img src="https://img.shields.io/badge/LinkedIn-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white" alt="LinkedIn"></a>
+  <a href="mailto:doanminhtan.dev@gmail.com"><img src="https://img.shields.io/badge/Email-EA4335?style=for-the-badge&logo=gmail&logoColor=white" alt="Email"></a>
+  <a href="#"><img src="https://img.shields.io/badge/Facebook-1877F2?style=for-the-badge&logo=facebook&logoColor=white" alt="Facebook"></a>
+</p>
+
+<p align="center">
+  <i>DocuMind is an AI-powered personal notebook assistant designed to help students and researchers manage and summarize their documents efficiently using state-of-the-art Deep Learning models.</i>
+</p>
+
+<p align="center">
+  <a href="#-development-setup"><b>Get Started</b></a> •
+  <a href="#-ai--deep-learning-stack"><b>AI Stack</b></a> •
+  <a href="#product-demo"><b>Features</b></a> •
+  <a href="#-documentation"><b>Docs</b></a>
+</p>
+
+
+
+<div align="center">
+
 
 <div align="center">
   <p>🌍 <b><a href="./README_VN.md">Vietnamese Version</a></b></p>
 </div>
-
-<div align="center">
-
-<!-- HEADER BANNER -->
-<img src="https://capsule-render.vercel.app/api?type=waving&color=0:00B4D8,100:0077B6&height=220&section=header&text=Doan%20Tan%20Minh%20Tan&fontSize=50&fontColor=ffffff&animation=fadeIn&fontAlignY=35&desc=AI%20Engineer%20%7C%20Fullstack%20Engineer&descSize=20&descAlignY=55&descAlign=50" width="100%"/>
-
-<br/>
-
-[![Portfolio](https://img.shields.io/badge/Portfolio-667eea?style=for-the-badge&logo=vercel&logoColor=white)](#)
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/tandoanminh/)
-[![Email](https://img.shields.io/badge/Email-EA4335?style=for-the-badge&logo=gmail&logoColor=white)](mailto:doanminhtan.dev@gmail.com)
-[![Facebook](https://img.shields.io/badge/Facebook-1877F2?style=for-the-badge&logo=facebook&logoColor=white)](#)
-
-<br/>
-
-</div>
-
-<p align="center">
-  <img src="./assets/thumbnail.png" alt="Project thumbnail" width="600">
-</p>
 
 ## Product Demo
 
@@ -62,6 +69,12 @@
 ---
 
 ## Student information
+
+<p align="center">
+  <a href="https://huit.edu.vn/">
+    <img src="./assets/Logo%20HUIT-03.png" alt="HUIT Logo" width="450">
+  </a>
+</p>
 
 | Student ID | Full name | GitHub | Email |
 |:----------:|------------------|-----------------------------------------|------------------------|
