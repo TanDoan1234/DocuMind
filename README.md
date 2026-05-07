@@ -1,6 +1,6 @@
 <div align="center">
 <h1>
-  <img src="./assets/logo.png" alt="DocuMind Logo" width="350" /><br>
+  <img src="./assets/logo.png" alt="DocuMind Logo" width="250" /><br>
   DOCUMIND
 </h1>
 
@@ -29,17 +29,14 @@
 
 <br/>
 
-[**Get Started**](#-development-setup) · [**AI Stack**](#-ai--deep-learning-stack) · [**Features**](#product-demo) · [**Docs**](#-documentation)
+[**Get Started**](#development-setup) · [**AI Stack**](#ai--deep-learning-stack) · [**Features**](#product-demo) · [**Docs**](#documentation)
 </div>
 
-
-
 <div align="center">
-
-
-<div align="center">
-  <p>🌍 <b><a href="./README_VN.md">Vietnamese Version</a></b></p>
+  🌍 <b><a href="./README_VN.md">Vietnamese Version</a></b>
 </div>
+
+---
 
 ## Product Demo
 

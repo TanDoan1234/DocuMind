@@ -1,6 +1,6 @@
 <div align="center">
 <h1>
-  <img src="./assets/logo.png" alt="DocuMind Logo" width="350" /><br>
+  <img src="./assets/logo.png" alt="DocuMind Logo" width="250" /><br>
   DOCUMIND
 </h1>
 
@@ -29,18 +29,14 @@
 
 <br/>
 
-[**Bắt đầu**](#-cài-đặt-phát-triển) · [**Công nghệ AI**](#-công-nghệ-ai--deep-learning) · [**Tính năng**](#demo-sản-phẩm) · [**Tài liệu**](#-tài-liệu-hướng-dẫn)
+[**Bắt đầu**](#cài-đặt-phát-triển) · [**Công nghệ AI**](#công-nghệ-ai--deep-learning) · [**Tính năng**](#demo-sản-phẩm) · [**Tài liệu**](#tài-liệu-hướng-dẫn)
 </div>
 
 <div align="center">
-  <p>🌍 <b><a href="./README.md">English Version</a></b></p>
+  🌍 <b><a href="./README.md">English Version</a></b>
 </div>
 
-<div align="center">
-
-
-
-</div>
+---
 
 ## Demo Sản Phẩm
 
