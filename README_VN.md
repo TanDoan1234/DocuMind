@@ -1,39 +1,34 @@
 <div align="center">
-  <img src="./assets/logo.png" alt="DocuMind Logo" width="350">
-  <h1>DOCUMIND</h1>
-  <h3>Đồ Án Cuối Kỳ Deep Learning</h3>
-  <p>IBM Docling • BARTpho & ViT5 • PhoBERT & XLM-RoBERTa</p>
+<img src="./assets/logo.png" alt="DocuMind Logo" width="250" />
+<h1>DOCUMIND</h1>
+
+### Đồ Án Cuối Kỳ Deep Learning
+**IBM Docling • BARTpho & ViT5 • PhoBERT & XLM-RoBERTa • Sentence Transformers**
+
+---
+
+[![Flutter](https://img.shields.io/badge/Flutter-3.24+-02569B?style=for-the-badge&logo=flutter&logoColor=white)](https://flutter.dev)
+[![FastAPI](https://img.shields.io/badge/FastAPI-Latest-005571?style=for-the-badge&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com)
+[![Python](https://img.shields.io/badge/Python-3.12+-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org)
+[![License](https://img.shields.io/badge/License-MIT-4fb320?style=for-the-badge)](LICENSE)
+[![Nền tảng](https://img.shields.io/badge/Nền%20tảng-iOS%20|%20Android%20|%20Web-9944FF?style=for-the-badge)](#)
+[![Stars](https://img.shields.io/badge/Stars-21-ffcc33?style=for-the-badge&logo=github&logoColor=white)](#)
+
+<br/>
+
+[![Portfolio](https://img.shields.io/badge/Portfolio-667eea?style=for-the-badge&logo=vercel&logoColor=white)](#)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/tandoanminh/)
+[![Email](https://img.shields.io/badge/Email-EA4335?style=for-the-badge&logo=gmail&logoColor=white)](#)
+[![Facebook](https://img.shields.io/badge/Facebook-1877F2?style=for-the-badge&logo=facebook&logoColor=white)](#)
+
+<br/>
+
+> *DocuMind là trợ lý sổ tay cá nhân AI được thiết kế để giúp sinh viên và nhà nghiên cứu quản lý và tóm tắt tài liệu hiệu quả bằng các mô hình Deep Learning tiên tiến nhất.*
+
+<br/>
+
+[**Bắt đầu**](#-cài-đặt-phát-triển) · [**Công nghệ AI**](#-công-nghệ-ai--deep-learning) · [**Tính năng**](#demo-sản-phẩm) · [**Tài liệu**](#-tài-liệu-hướng-dẫn)
 </div>
-
-<p align="center">
-  <img src="https://img.shields.io/badge/Flutter-3.24+-02569B?style=for-the-badge&logo=flutter&logoColor=white" alt="Flutter" />
-  <img src="https://img.shields.io/badge/FastAPI-Latest-005571?style=for-the-badge&logo=fastapi&logoColor=white" alt="FastAPI" />
-  <img src="https://img.shields.io/badge/Python-3.12+-3776AB?style=for-the-badge&logo=python&logoColor=white" alt="Python" />
-  <img src="https://img.shields.io/badge/License-MIT-4fb320?style=for-the-badge" alt="License" />
-</p>
-
-<p align="center">
-  <img src="https://img.shields.io/badge/Nền%20tảng-iOS%20|%20Android%20|%20Web-9944FF?style=for-the-badge" alt="Platform" />
-  <img src="https://img.shields.io/badge/Stars-21-ffcc33?style=for-the-badge&logo=github&logoColor=white" alt="Stars" />
-</p>
-
-<p align="center">
-  <a href="#"><img src="https://img.shields.io/badge/Portfolio-667eea?style=for-the-badge&logo=vercel&logoColor=white" alt="Portfolio"></a>
-  <a href="https://www.linkedin.com/in/tandoanminh/"><img src="https://img.shields.io/badge/LinkedIn-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white" alt="LinkedIn"></a>
-  <a href="mailto:doanminhtan.dev@gmail.com"><img src="https://img.shields.io/badge/Email-EA4335?style=for-the-badge&logo=gmail&logoColor=white" alt="Email"></a>
-  <a href="#"><img src="https://img.shields.io/badge/Facebook-1877F2?style=for-the-badge&logo=facebook&logoColor=white" alt="Facebook"></a>
-</p>
-
-<p align="center">
-  <i>DocuMind là trợ lý sổ tay cá nhân AI được thiết kế để giúp sinh viên và nhà nghiên cứu quản lý và tóm tắt tài liệu hiệu quả bằng các mô hình Deep Learning tiên tiến nhất.</i>
-</p>
-
-<p align="center">
-  <a href="#-cài-đặt-phát-triển"><b>Bắt đầu</b></a> •
-  <a href="#-công-nghệ-ai--deep-learning"><b>Công nghệ AI</b></a> •
-  <a href="#demo-sản-phẩm"><b>Tính năng</b></a> •
-  <a href="#-tài-liệu-hướng-dẫn"><b>Tài liệu</b></a>
-</p>
 
 <div align="center">
   <p>🌍 <b><a href="./README.md">English Version</a></b></p>

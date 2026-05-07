@@ -1,39 +1,34 @@
 <div align="center">
-  <img src="./assets/logo.png" alt="DocuMind Logo" width="350">
-  <h1>DOCUMIND</h1>
-  <h3>Deep Learning Final Project</h3>
-  <p>IBM Docling • BARTpho & ViT5 • PhoBERT & XLM-RoBERTa • Sentence Transformers</p>
+<img src="./assets/logo.png" alt="DocuMind Logo" width="350" />
+<h1>DOCUMIND</h1>
+
+### Deep Learning Final Project
+**IBM Docling • BARTpho & ViT5 • PhoBERT & XLM-RoBERTa • Sentence Transformers**
+
+---
+
+[![Flutter](https://img.shields.io/badge/Flutter-3.24+-02569B?style=for-the-badge&logo=flutter&logoColor=white)](https://flutter.dev)
+[![FastAPI](https://img.shields.io/badge/FastAPI-Latest-005571?style=for-the-badge&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com)
+[![Python](https://img.shields.io/badge/Python-3.12+-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org)
+[![License](https://img.shields.io/badge/License-MIT-4fb320?style=for-the-badge)](LICENSE)
+[![Platform](https://img.shields.io/badge/Platform-iOS%20|%20Android%20|%20Web-9944FF?style=for-the-badge)](#)
+[![Stars](https://img.shields.io/badge/Stars-21-ffcc33?style=for-the-badge&logo=github&logoColor=white)](#)
+
+<br/>
+
+[![Portfolio](https://img.shields.io/badge/Portfolio-667eea?style=for-the-badge&logo=vercel&logoColor=white)](#)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/tandoanminh/)
+[![Email](https://img.shields.io/badge/Email-EA4335?style=for-the-badge&logo=gmail&logoColor=white)](#)
+[![Facebook](https://img.shields.io/badge/Facebook-1877F2?style=for-the-badge&logo=facebook&logoColor=white)](#)
+
+<br/>
+
+> *DocuMind is an AI-powered personal notebook assistant designed to help students and researchers manage and summarize their documents efficiently using state-of-the-art Deep Learning models.*
+
+<br/>
+
+[**Get Started**](#-development-setup) · [**AI Stack**](#-ai--deep-learning-stack) · [**Features**](#product-demo) · [**Docs**](#-documentation)
 </div>
-
-<p align="center">
-  <img src="https://img.shields.io/badge/Flutter-3.24+-02569B?style=for-the-badge&logo=flutter&logoColor=white" alt="Flutter" />
-  <img src="https://img.shields.io/badge/FastAPI-Latest-005571?style=for-the-badge&logo=fastapi&logoColor=white" alt="FastAPI" />
-  <img src="https://img.shields.io/badge/Python-3.12+-3776AB?style=for-the-badge&logo=python&logoColor=white" alt="Python" />
-  <img src="https://img.shields.io/badge/License-MIT-4fb320?style=for-the-badge" alt="License" />
-</p>
-
-<p align="center">
-  <img src="https://img.shields.io/badge/Platform-iOS%20|%20Android%20|%20Web-9944FF?style=for-the-badge" alt="Platform" />
-  <img src="https://img.shields.io/badge/Stars-21-ffcc33?style=for-the-badge&logo=github&logoColor=white" alt="Stars" />
-</p>
-
-<p align="center">
-  <a href="#"><img src="https://img.shields.io/badge/Portfolio-667eea?style=for-the-badge&logo=vercel&logoColor=white" alt="Portfolio"></a>
-  <a href="https://www.linkedin.com/in/tandoanminh/"><img src="https://img.shields.io/badge/LinkedIn-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white" alt="LinkedIn"></a>
-  <a href="mailto:doanminhtan.dev@gmail.com"><img src="https://img.shields.io/badge/Email-EA4335?style=for-the-badge&logo=gmail&logoColor=white" alt="Email"></a>
-  <a href="#"><img src="https://img.shields.io/badge/Facebook-1877F2?style=for-the-badge&logo=facebook&logoColor=white" alt="Facebook"></a>
-</p>
-
-<p align="center">
-  <i>DocuMind is an AI-powered personal notebook assistant designed to help students and researchers manage and summarize their documents efficiently using state-of-the-art Deep Learning models.</i>
-</p>
-
-<p align="center">
-  <a href="#-development-setup"><b>Get Started</b></a> •
-  <a href="#-ai--deep-learning-stack"><b>AI Stack</b></a> •
-  <a href="#product-demo"><b>Features</b></a> •
-  <a href="#-documentation"><b>Docs</b></a>
-</p>
 
 
 
