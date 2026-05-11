@@ -6,6 +6,7 @@ from backend.app.core.security import get_password_hash, verify_password, create
 from backend.app.core.config import settings
 from backend.app.models.models import User
 from backend.app.schemas.schemas import UserCreate, UserLogin, Token, UserPublic
+from backend.app.api.deps import get_current_user
 
 router = APIRouter()
 
@@ -59,3 +60,7 @@ def login(user_in: UserLogin, session: Session = Depends(get_session)):
         "token_type": "bearer",
         "full_name": user.full_name
     }
+
+@router.get("/me", response_model=UserPublic)
+def read_user_me(current_user: User = Depends(get_current_user)):
+    return current_user

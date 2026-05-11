@@ -9,6 +9,7 @@ import 'package:documind_mobile/features/profile/profile_screen.dart';
 import 'package:documind_mobile/core/api_service.dart';
 import 'package:documind_mobile/shared/widgets/atoms/skeleton.dart';
 import 'package:documind_mobile/shared/widgets/fade_indexed_stack.dart';
+import 'package:documind_mobile/features/notebook/create_notebook_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -20,8 +21,9 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   int _currentIndex = 0;
   String _displayName = "Linh";
-  bool _isLoadingContent = true; // Trạng thái tải nội dung
+  bool _isLoadingContent = true;
   final ApiService _apiService = ApiService();
+  List<Map<String, dynamic>> _notebooks = [];
 
   @override
   void initState() {
@@ -30,6 +32,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future<void> _loadInitialData() async {
+    setState(() => _isLoadingContent = true);
     // 1. Tải tên người dùng
     final fullName = await _apiService.getUserName();
     if (fullName != null && fullName.isNotEmpty) {
@@ -40,13 +43,44 @@ class _HomeScreenState extends State<HomeScreen> {
       }
     }
 
-    // 2. Giả lập tải dữ liệu sổ tay và ghi chú (2 giây)
-    await Future.delayed(const Duration(seconds: 2));
+    // 2. Tải dữ liệu sổ tay thực tế
+    final result = await _apiService.getNotebooks();
+
     if (mounted) {
-      setState(() {
-        _isLoadingContent = false;
-      });
+      if (result["success"]) {
+        final List<dynamic> data = result["data"];
+        // Sắp xếp theo id hoặc thời gian nếu có (giả định notebook_id tăng dần hoặc dùng created_at)
+        data.sort(
+            (a, b) => (b["created_at"] ?? "").compareTo(a["created_at"] ?? ""));
+
+        setState(() {
+          _notebooks =
+              data.where((item) => item["show_on_home"] == true).map((item) {
+            return {
+              "id": item["notebook_id"],
+              "title": item["title"],
+              "count": 0, // Tạm thời
+              "icon": item["icon_path"] ?? _getCategoryIcon(item["title"]),
+            };
+          }).toList();
+          _isLoadingContent = false;
+        });
+      } else {
+        setState(() {
+          _isLoadingContent = false;
+        });
+      }
     }
+  }
+
+  String _getCategoryIcon(String title) {
+    if (title.contains("Học"))
+      return "assets/icons/categories/icon-category-study.png";
+    if (title.contains("Dự"))
+      return "assets/icons/categories/icon-category-project.png";
+    if (title.contains("Cá"))
+      return "assets/icons/categories/icon-category-personal.png";
+    return "assets/icons/categories/icon-category-research.png";
   }
 
   @override
@@ -57,7 +91,7 @@ class _HomeScreenState extends State<HomeScreen> {
         index: _currentIndex,
         children: [
           _buildHomeContent(context),
-          const NotebookScreen(),
+          NotebookScreen(onNotebookCreated: _loadInitialData),
           const AIChatScreen(), // Placeholder cho tab AI
           const ProfileScreen(),
         ],
@@ -68,13 +102,15 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildHomeContent(BuildContext context) {
-    return Column(
-      children: [
-        _buildHeader(context),
-        Expanded(
-          child: SingleChildScrollView(
-            physics: const BouncingScrollPhysics(),
-            child: Padding(
+    return RefreshIndicator(
+      onRefresh: _loadInitialData,
+      color: AppColors.primary,
+      child: SingleChildScrollView(
+        physics: const AlwaysScrollableScrollPhysics(),
+        child: Column(
+          children: [
+            _buildHeader(context),
+            Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -88,26 +124,35 @@ class _HomeScreenState extends State<HomeScreen> {
                   const SizedBox(height: 12),
                   _buildQuickActions(),
                   const SizedBox(height: 32),
-                  _buildSectionHeader(
-                    "Sổ tay của bạn",
-                    showSeeAll: true,
-                    onSeeAllTap: () {
-                      setState(() => _currentIndex = 1);
-                    },
-                  ),
-                  const SizedBox(height: 6),
-                  _isLoadingContent ? _buildFolderSkeleton() : _buildFolderGrid(),
-                  const SizedBox(height: 32),
+
+                  // Chỉ hiện phần Sổ tay nếu đang load (hiện skeleton) hoặc đã có dữ liệu
+                  if (_isLoadingContent || _notebooks.isNotEmpty) ...[
+                    _buildSectionHeader(
+                      "Sổ tay gần đây",
+                      showSeeAll: true,
+                      onSeeAllTap: () {
+                        setState(() => _currentIndex = 1);
+                      },
+                    ),
+                    const SizedBox(height: 6),
+                    _isLoadingContent
+                        ? _buildFolderSkeleton()
+                        : _buildFolderGrid(),
+                    const SizedBox(height: 32),
+                  ],
+
                   _buildSectionHeader("Ghi chú gần đây", showSeeAll: true),
                   const SizedBox(height: 8),
-                  _isLoadingContent ? _buildNoteSkeleton() : _buildRecentNoteCard(),
+                  _isLoadingContent
+                      ? _buildNoteSkeleton()
+                      : _buildRecentNoteCard(),
                   const SizedBox(height: 100),
                 ],
               ),
             ),
-          ),
+          ],
         ),
-      ],
+      ),
     );
   }
 
@@ -142,24 +187,33 @@ class _HomeScreenState extends State<HomeScreen> {
       color: Colors.white,
       child: Row(
         children: [
-          Image.asset("assets/icons/utility/icon-utility-menu.png", width: 32, height: 32),
+          Image.asset("assets/icons/utility/icon-utility-menu.png",
+              width: 32, height: 32),
           const Spacer(),
           Column(
             children: [
               RichText(
                 text: TextSpan(
-                  style: GoogleFonts.outfit(fontSize: 22, fontWeight: FontWeight.bold, color: AppColors.textDark),
+                  style: GoogleFonts.outfit(
+                      fontSize: 22,
+                      fontWeight: FontWeight.bold,
+                      color: AppColors.textDark),
                   children: [
                     const TextSpan(text: "Chào bạn, "),
-                    TextSpan(text: "$_displayName!", style: const TextStyle(color: AppColors.primary)),
+                    TextSpan(
+                        text: "$_displayName!",
+                        style: const TextStyle(color: AppColors.primary)),
                   ],
                 ),
               ),
-              Text("Hôm nay bạn muốn học gì?", style: GoogleFonts.inter(fontSize: 14, color: Colors.grey.shade500)),
+              Text("Hôm nay bạn muốn học gì?",
+                  style: GoogleFonts.inter(
+                      fontSize: 14, color: Colors.grey.shade500)),
             ],
           ),
           const Spacer(),
-          Image.asset("assets/icons/utility/icon-utility-bell.png", width: 32, height: 32),
+          Image.asset("assets/icons/utility/icon-utility-bell.png",
+              width: 32, height: 32),
         ],
       ),
     );
@@ -176,9 +230,12 @@ class _HomeScreenState extends State<HomeScreen> {
       child: TextField(
         decoration: InputDecoration(
           hintText: "Tìm kiếm ghi chú, sổ tay...",
-          hintStyle: GoogleFonts.inter(color: Colors.grey.shade400, fontSize: 14),
-          prefixIcon: const Icon(Icons.search_rounded, color: Colors.grey, size: 22),
-          suffixIcon: Icon(Icons.tune_rounded, color: Colors.grey.shade400, size: 22),
+          hintStyle:
+              GoogleFonts.inter(color: Colors.grey.shade400, fontSize: 14),
+          prefixIcon:
+              const Icon(Icons.search_rounded, color: Colors.grey, size: 22),
+          suffixIcon:
+              Icon(Icons.tune_rounded, color: Colors.grey.shade400, size: 22),
           border: InputBorder.none,
           contentPadding: const EdgeInsets.symmetric(vertical: 12),
         ),
@@ -206,7 +263,8 @@ class _HomeScreenState extends State<HomeScreen> {
             top: 10,
             child: Opacity(
               opacity: 0.2,
-              child: Image.asset("assets/decor/clouds/decor-cloud-mint-01.png", width: 140),
+              child: Image.asset("assets/decor/clouds/decor-cloud-mint-01.png",
+                  width: 140),
             ),
           ),
           Positioned(
@@ -214,7 +272,8 @@ class _HomeScreenState extends State<HomeScreen> {
             top: 5,
             child: Opacity(
               opacity: 0.25,
-              child: Image.asset("assets/decor/clouds/decor-cloud-mint-01.png", width: 130),
+              child: Image.asset("assets/decor/clouds/decor-cloud-mint-01.png",
+                  width: 130),
             ),
           ),
           Positioned(
@@ -222,7 +281,8 @@ class _HomeScreenState extends State<HomeScreen> {
             bottom: 5,
             child: Opacity(
               opacity: 0.2,
-              child: Image.asset("assets/decor/clouds/decor-cloud-mint-01.png", width: 110),
+              child: Image.asset("assets/decor/clouds/decor-cloud-mint-01.png",
+                  width: 110),
             ),
           ),
           Positioned(
@@ -230,7 +290,9 @@ class _HomeScreenState extends State<HomeScreen> {
             top: -15,
             child: Opacity(
               opacity: 0.5,
-              child: Image.asset("assets/decor/botanical/decor-leaf-sprig-03.png", width: 100),
+              child: Image.asset(
+                  "assets/decor/botanical/decor-leaf-sprig-03.png",
+                  width: 100),
             ),
           ),
           Positioned(
@@ -238,7 +300,9 @@ class _HomeScreenState extends State<HomeScreen> {
             bottom: -5,
             child: Opacity(
               opacity: 0.4,
-              child: Image.asset("assets/decor/botanical/decor-leaf-sprig-02.png", width: 70),
+              child: Image.asset(
+                  "assets/decor/botanical/decor-leaf-sprig-02.png",
+                  width: 70),
             ),
           ),
           Padding(
@@ -247,9 +311,15 @@ class _HomeScreenState extends State<HomeScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text("Cùng AI học tập", style: GoogleFonts.outfit(fontSize: 22, fontWeight: FontWeight.bold, color: const Color(0xFF00695C))),
+                Text("Cùng AI học tập",
+                    style: GoogleFonts.outfit(
+                        fontSize: 22,
+                        fontWeight: FontWeight.bold,
+                        color: const Color(0xFF00695C))),
                 const SizedBox(height: 6),
-                Text("thông minh hơn mỗi ngày!", style: GoogleFonts.inter(fontSize: 15, color: const Color(0xFF4DB6AC))),
+                Text("thông minh hơn mỗi ngày!",
+                    style: GoogleFonts.inter(
+                        fontSize: 15, color: const Color(0xFF4DB6AC))),
               ],
             ),
           ),
@@ -258,14 +328,15 @@ class _HomeScreenState extends State<HomeScreen> {
             top: 15,
             child: Opacity(
               opacity: 0.4,
-              child: Image.asset("assets/decor/clouds/decor-cloud-mint-01.png", width: 130),
+              child: Image.asset("assets/decor/clouds/decor-cloud-mint-01.png",
+                  width: 130),
             ),
           ),
           Positioned(
             right: -45,
             bottom: -35,
             child: Image.asset(
-              "assets/mascot/mascot-owl-reading-book.png", 
+              "assets/mascot/mascot-owl-reading-book.png",
               height: 250,
               fit: BoxFit.contain,
             ),
@@ -275,7 +346,9 @@ class _HomeScreenState extends State<HomeScreen> {
             bottom: -15,
             child: Opacity(
               opacity: 0.5,
-              child: Image.asset("assets/decor/botanical/decor-leaf-double-01.png", width: 90),
+              child: Image.asset(
+                  "assets/decor/botanical/decor-leaf-double-01.png",
+                  width: 90),
             ),
           ),
           Positioned(
@@ -283,7 +356,9 @@ class _HomeScreenState extends State<HomeScreen> {
             bottom: -5,
             child: Opacity(
               opacity: 0.3,
-              child: Image.asset("assets/decor/botanical/decor-leaf-single-01.png", width: 60),
+              child: Image.asset(
+                  "assets/decor/botanical/decor-leaf-single-01.png",
+                  width: 60),
             ),
           ),
         ],
@@ -291,18 +366,24 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildSectionHeader(String title, {bool showSeeAll = false, VoidCallback? onSeeAllTap}) {
+  Widget _buildSectionHeader(String title,
+      {bool showSeeAll = false, VoidCallback? onSeeAllTap}) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text(title, style: GoogleFonts.outfit(fontSize: 19, fontWeight: FontWeight.bold, color: AppColors.textDark)),
+        Text(title,
+            style: GoogleFonts.outfit(
+                fontSize: 19,
+                fontWeight: FontWeight.bold,
+                color: AppColors.textDark)),
         if (showSeeAll)
           GestureDetector(
             onTap: onSeeAllTap,
-            child: Text(
-              "Xem tất cả", 
-              style: GoogleFonts.inter(fontSize: 14, color: AppColors.primary, fontWeight: FontWeight.bold)
-            ),
+            child: Text("Xem tất cả",
+                style: GoogleFonts.inter(
+                    fontSize: 14,
+                    color: AppColors.primary,
+                    fontWeight: FontWeight.bold)),
           ),
       ],
     );
@@ -310,9 +391,18 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget _buildQuickActions() {
     final actions = [
-      {"icon": "assets/icons/actions/icon-actions-summary.png", "label": "Tóm tắt"},
-      {"icon": "assets/icons/actions/icon-actions-ai-chat.png", "label": "Hỏi AI"},
-      {"icon": "assets/icons/actions/icon-actions-flashcards.png", "label": "Flashcard"},
+      {
+        "icon": "assets/icons/actions/icon-actions-summary.png",
+        "label": "Tóm tắt"
+      },
+      {
+        "icon": "assets/icons/actions/icon-actions-ai-chat.png",
+        "label": "Hỏi AI"
+      },
+      {
+        "icon": "assets/icons/actions/icon-actions-flashcards.png",
+        "label": "Flashcard"
+      },
       {"icon": "assets/icons/actions/icon-action-more.png", "label": "Thêm"},
     ];
 
@@ -323,16 +413,27 @@ class _HomeScreenState extends State<HomeScreen> {
           child: GestureDetector(
             onTap: () {
               if (item["label"] == "Hỏi AI") {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => const AIChatScreen()));
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const AIChatScreen()));
               } else if (item["label"] == "Tóm tắt") {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => const SummaryScreen()));
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const SummaryScreen()));
               }
             },
             child: Column(
               children: [
-                Image.asset(item["icon"] as String, width: 72, height: 72, fit: BoxFit.contain),
+                Image.asset(item["icon"] as String,
+                    width: 72, height: 72, fit: BoxFit.contain),
                 const SizedBox(height: 6),
-                Text(item["label"] as String, style: GoogleFonts.inter(fontSize: 13, fontWeight: FontWeight.w600, color: AppColors.textDark)),
+                Text(item["label"] as String,
+                    style: GoogleFonts.inter(
+                        fontSize: 13,
+                        fontWeight: FontWeight.w600,
+                        color: AppColors.textDark)),
               ],
             ),
           ),
@@ -342,13 +443,17 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildFolderGrid() {
-    final items = [
-      {"title": "Học tập", "count": 24, "icon": "assets/icons/categories/icon-category-study.png"},
-      {"title": "Dự án", "count": 18, "icon": "assets/icons/categories/icon-category-project.png"},
-      {"title": "Nghiên cứu", "count": 16, "icon": "assets/icons/categories/icon-category-research.png"},
-      {"title": "Cá nhân", "count": 10, "icon": "assets/icons/categories/icon-category-personal.png"},
-    ];
-
+    if (_notebooks.isEmpty) {
+      return Center(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 20),
+          child: Text(
+            "Chưa có sổ tay hiển thị ở đây",
+            style: GoogleFonts.inter(color: Colors.grey.shade500),
+          ),
+        ),
+      );
+    }
     return GridView.builder(
       shrinkWrap: true,
       padding: EdgeInsets.zero,
@@ -359,9 +464,9 @@ class _HomeScreenState extends State<HomeScreen> {
         mainAxisSpacing: 8,
         childAspectRatio: 2.5,
       ),
-      itemCount: items.length,
+      itemCount: _notebooks.length > 4 ? 4 : _notebooks.length,
       itemBuilder: (context, index) {
-        final folder = items[index];
+        final folder = _notebooks[index];
         return GestureDetector(
           onTap: () {
             Navigator.push(
@@ -369,6 +474,8 @@ class _HomeScreenState extends State<HomeScreen> {
               MaterialPageRoute(
                 builder: (context) => NotebookDetailScreen(
                   notebookTitle: folder['title'] as String,
+                  iconPath: folder['icon'] as String,
+                  themeColor: folder['color'] as Color? ?? AppColors.primary,
                 ),
               ),
             );
@@ -382,15 +489,23 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             child: Row(
               children: [
-                Image.asset(folder["icon"] as String, width: 44, height: 44, fit: BoxFit.contain),
+                Image.asset(folder["icon"] as String,
+                    width: 44, height: 44, fit: BoxFit.contain),
                 const SizedBox(width: 10),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text(folder["title"] as String, style: GoogleFonts.inter(fontSize: 14, fontWeight: FontWeight.bold, color: AppColors.textDark), overflow: TextOverflow.ellipsis),
-                      Text("${folder["count"]} ghi chú", style: GoogleFonts.inter(fontSize: 11, color: Colors.grey.shade500)),
+                      Text(folder["title"] as String,
+                          style: GoogleFonts.inter(
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold,
+                              color: AppColors.textDark),
+                          overflow: TextOverflow.ellipsis),
+                      Text("${folder["count"]} ghi chú",
+                          style: GoogleFonts.inter(
+                              fontSize: 11, color: Colors.grey.shade500)),
                     ],
                   ),
                 ),
@@ -414,16 +529,25 @@ class _HomeScreenState extends State<HomeScreen> {
         children: [
           Container(
             padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(color: const Color(0xFFF1F8F7), borderRadius: BorderRadius.circular(14)),
-            child: const Icon(Icons.description_rounded, color: AppColors.primary, size: 24),
+            decoration: BoxDecoration(
+                color: const Color(0xFFF1F8F7),
+                borderRadius: BorderRadius.circular(14)),
+            child: const Icon(Icons.description_rounded,
+                color: AppColors.primary, size: 24),
           ),
           const SizedBox(width: 16),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text("Định luật Newton", style: GoogleFonts.inter(fontSize: 16, fontWeight: FontWeight.bold, color: AppColors.textDark)),
-                Text("Vật lý • 12 phút trước", style: GoogleFonts.inter(fontSize: 12, color: Colors.grey.shade500)),
+                Text("Định luật Newton",
+                    style: GoogleFonts.inter(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: AppColors.textDark)),
+                Text("Vật lý • 12 phút trước",
+                    style: GoogleFonts.inter(
+                        fontSize: 12, color: Colors.grey.shade500)),
               ],
             ),
           ),
@@ -439,41 +563,72 @@ class _HomeScreenState extends State<HomeScreen> {
       decoration: BoxDecoration(
         color: Colors.white,
         boxShadow: [
-          BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 20, offset: const Offset(0, -5))
+          BoxShadow(
+              color: Colors.black.withValues(alpha: 0.05),
+              blurRadius: 20,
+              offset: const Offset(0, -5))
         ],
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
-          Expanded(child: _buildNavItem(0, "assets/icons/navigations/icon-nav-home-outline.png", "Trang chủ")),
-          Expanded(child: _buildNavItem(1, "assets/icons/navigations/icon-nav-notebook-outline.png", "Số tay")),
-          
+          Expanded(
+              child: _buildNavItem(
+                  0,
+                  "assets/icons/navigations/icon-nav-home-outline.png",
+                  "Trang chủ")),
+          Expanded(
+              child: _buildNavItem(
+                  1,
+                  "assets/icons/navigations/icon-nav-notebook-outline.png",
+                  "Số tay")),
           Expanded(
             child: Center(
-              child: Container(
-                width: 60,
-                height: 60,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  gradient: const LinearGradient(colors: [AppColors.primary, Color(0xFF4DB6AC)]),
-                  boxShadow: [
-                    BoxShadow(color: AppColors.primary.withValues(alpha: 0.3), blurRadius: 12, offset: const Offset(0, 4))
-                  ],
-                ),
-                child: Center(
-                  child: Image.asset(
-                    "assets/icons/navigations/icon-nav-plus-outline.png", 
-                    width: 30, 
-                    height: 30, 
-                    color: Colors.white,
+              child: GestureDetector(
+                onTap: () async {
+                  final result = await Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => CreateNotebookScreen()),
+                  );
+                  if (result == true) {
+                    _loadInitialData();
+                  }
+                },
+                child: Container(
+                  width: 60,
+                  height: 60,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    gradient: const LinearGradient(
+                        colors: [AppColors.primary, Color(0xFF4DB6AC)]),
+                    boxShadow: [
+                      BoxShadow(
+                          color: AppColors.primary.withValues(alpha: 0.3),
+                          blurRadius: 12,
+                          offset: const Offset(0, 4))
+                    ],
+                  ),
+                  child: Center(
+                    child: Image.asset(
+                      "assets/icons/navigations/icon-nav-plus-outline.png",
+                      width: 30,
+                      height: 30,
+                      color: Colors.white,
+                    ),
                   ),
                 ),
               ),
             ),
           ),
-          
-          Expanded(child: _buildNavItem(2, "assets/icons/navigations/icon-nav-ai-outline.png", "AI")),
-          Expanded(child: _buildNavItem(3, "assets/icons/navigations/icon-nav-profile-outline.png", "Cá nhân")),
+          Expanded(
+              child: _buildNavItem(
+                  2, "assets/icons/navigations/icon-nav-ai-outline.png", "AI")),
+          Expanded(
+              child: _buildNavItem(
+                  3,
+                  "assets/icons/navigations/icon-nav-profile-outline.png",
+                  "Cá nhân")),
         ],
       ),
     );
@@ -481,7 +636,9 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget _buildNavItem(int index, String iconPath, String label) {
     bool isActive = _currentIndex == index;
-    String finalIconPath = (isActive && index != 0) ? iconPath.replaceAll("outline", "filled") : iconPath;
+    String finalIconPath = (isActive && index != 0)
+        ? iconPath.replaceAll("outline", "filled")
+        : iconPath;
     return GestureDetector(
       onTap: () => setState(() => _currentIndex = index),
       behavior: HitTestBehavior.opaque,
@@ -490,9 +647,9 @@ class _HomeScreenState extends State<HomeScreen> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Image.asset(
-            finalIconPath, 
+            finalIconPath,
             width: 36,
-            height: 36, 
+            height: 36,
             fit: BoxFit.contain,
           ),
           const SizedBox(height: 2),

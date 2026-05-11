@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:documind_mobile/core/app_colors.dart';
+import 'package:documind_mobile/core/api_service.dart';
 
 class CreateNotebookScreen extends StatefulWidget {
   const CreateNotebookScreen({super.key});
@@ -11,9 +12,13 @@ class CreateNotebookScreen extends StatefulWidget {
 
 class _CreateNotebookScreenState extends State<CreateNotebookScreen> {
   String _selectedIcon = "assets/icons/categories/icon-category-study.png";
-  Color _selectedColor = const Color(0xFF80CBC4);
   bool _isPrivate = true;
   bool _showOnHome = true;
+  bool _isLoading = false;
+
+  final TextEditingController _titleController = TextEditingController();
+  final TextEditingController _descController = TextEditingController();
+  final ApiService _apiService = ApiService();
 
   final List<String> _categoryIcons = [
     "assets/icons/categories/icon-category-study.png",
@@ -22,13 +27,43 @@ class _CreateNotebookScreenState extends State<CreateNotebookScreen> {
     "assets/icons/categories/icon-category-personal.png",
   ];
 
-  final List<Color> _colors = [
-    const Color(0xFF80CBC4),
-    const Color(0xFFBBDEFB),
-    const Color(0xFFFFE0B2),
-    const Color(0xFFF8BBD0),
-    const Color(0xFFE1BEE7),
-  ];
+  @override
+  void dispose() {
+    _titleController.dispose();
+    _descController.dispose();
+    super.dispose();
+  }
+
+  void _handleCreateNotebook() async {
+    final title = _titleController.text.trim();
+    if (title.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Vui lòng nhập tên sổ tay")),
+      );
+      return;
+    }
+
+    setState(() => _isLoading = true);
+    
+    final result = await _apiService.createNotebook(
+      title,
+      isPrivate: _isPrivate,
+      showOnHome: _showOnHome,
+      iconPath: _selectedIcon,
+    );
+    
+    if (mounted) {
+      setState(() => _isLoading = false);
+      
+      if (result["success"]) {
+        Navigator.pop(context, true);
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(result["message"] ?? "Đã có lỗi xảy ra")),
+        );
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -47,8 +82,6 @@ class _CreateNotebookScreenState extends State<CreateNotebookScreen> {
             _buildFormSection(),
             const SizedBox(height: 24),
             _buildIconPicker(),
-            const SizedBox(height: 24),
-            _buildColorPicker(),
             const SizedBox(height: 24),
             _buildPrivacyPicker(),
             const SizedBox(height: 24),
@@ -78,8 +111,10 @@ class _CreateNotebookScreenState extends State<CreateNotebookScreen> {
       centerTitle: true,
       actions: [
         IconButton(
-          icon: const Icon(Icons.check_rounded, color: AppColors.primary, size: 28),
-          onPressed: () => Navigator.pop(context),
+          icon: _isLoading 
+            ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2))
+            : const Icon(Icons.check_rounded, color: AppColors.primary, size: 28),
+          onPressed: _isLoading ? null : _handleCreateNotebook,
         ),
         const SizedBox(width: 8),
       ],
@@ -142,6 +177,7 @@ class _CreateNotebookScreenState extends State<CreateNotebookScreen> {
         Text("Tên sổ tay", style: GoogleFonts.outfit(fontSize: 16, fontWeight: FontWeight.bold, color: AppColors.textDark)),
         const SizedBox(height: 8),
         TextField(
+          controller: _titleController,
           decoration: InputDecoration(
             hintText: "Ví dụ: Học tiếng Anh",
             hintStyle: GoogleFonts.inter(color: Colors.grey.shade400, fontSize: 14),
@@ -156,6 +192,7 @@ class _CreateNotebookScreenState extends State<CreateNotebookScreen> {
         Text("Mô tả", style: GoogleFonts.outfit(fontSize: 16, fontWeight: FontWeight.bold, color: AppColors.textDark)),
         const SizedBox(height: 8),
         TextField(
+          controller: _descController,
           maxLines: 3,
           decoration: InputDecoration(
             hintText: "Ghi chú, tài liệu và mục tiêu học tập...",
@@ -202,34 +239,6 @@ class _CreateNotebookScreenState extends State<CreateNotebookScreen> {
     );
   }
 
-  Widget _buildColorPicker() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text("Màu sắc", style: GoogleFonts.outfit(fontSize: 16, fontWeight: FontWeight.bold, color: AppColors.textDark)),
-        const SizedBox(height: 12),
-        Row(
-          children: _colors.map((color) {
-            bool isSelected = _selectedColor == color;
-            return GestureDetector(
-              onTap: () => setState(() => _selectedColor = color),
-              child: Container(
-                margin: const EdgeInsets.only(right: 16),
-                width: 44,
-                height: 44,
-                decoration: BoxDecoration(
-                  color: color,
-                  shape: BoxShape.circle,
-                  border: isSelected ? Border.all(color: AppColors.primary, width: 3) : null,
-                ),
-                child: isSelected ? const Icon(Icons.check, color: Colors.white, size: 20) : null,
-              ),
-            );
-          }).toList(),
-        ),
-      ],
-    );
-  }
 
   Widget _buildPrivacyPicker() {
     return Column(
@@ -326,16 +335,18 @@ class _CreateNotebookScreenState extends State<CreateNotebookScreen> {
       width: double.infinity,
       height: 56,
       child: ElevatedButton(
-        onPressed: () => Navigator.pop(context),
+        onPressed: _isLoading ? null : _handleCreateNotebook,
         style: ElevatedButton.styleFrom(
           backgroundColor: AppColors.primary,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
           elevation: 0,
         ),
-        child: Text(
-          "Tạo sổ tay",
-          style: GoogleFonts.outfit(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
-        ),
+        child: _isLoading 
+          ? const CircularProgressIndicator(color: Colors.white)
+          : Text(
+              "Tạo sổ tay",
+              style: GoogleFonts.outfit(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
+            ),
       ),
     );
   }

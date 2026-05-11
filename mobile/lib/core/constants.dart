@@ -6,4 +6,5 @@ class ApiConstants {
 
   static const String loginEndpoint = "/auth/login";
   static const String registerEndpoint = "/auth/register";
+  static const String authEndpoint = "/auth";
 }

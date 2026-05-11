@@ -70,6 +70,18 @@ class ApiService extends BaseApiService {
     await storage.delete(key: "full_name");
   }
 
+  Future<Map<String, dynamic>> getProfile() async {
+    try {
+      final response = await http.get(
+        Uri.parse("${ApiConstants.baseUrl}${ApiConstants.authEndpoint}/me"),
+        headers: await getHeaders(isAuth: true),
+      );
+      return handleResponse(response);
+    } catch (e) {
+      return handleError(e);
+    }
+  }
+
   // --- STORAGE HELPERS ---
 
   Future<String?> getToken() async {
@@ -80,5 +92,49 @@ class ApiService extends BaseApiService {
   Future<String?> getUserName() async {
     _cachedName ??= await storage.read(key: "full_name");
     return _cachedName;
+  }
+
+  // --- NOTEBOOK METHODS ---
+
+  Future<Map<String, dynamic>> getNotebooks() async {
+    try {
+      final response = await http.get(
+        Uri.parse("${ApiConstants.baseUrl}/notebooks/"),
+        headers: await getHeaders(isAuth: true),
+      );
+      return handleResponse(response);
+    } catch (e) {
+      return handleError(e);
+    }
+  }
+
+  Future<Map<String, dynamic>> createNotebook(String title, {bool isPrivate = true, bool showOnHome = true, String? iconPath}) async {
+    try {
+      final response = await http.post(
+        Uri.parse("${ApiConstants.baseUrl}/notebooks/"),
+        headers: await getHeaders(isAuth: true),
+        body: jsonEncode({
+          "title": title,
+          "is_private": isPrivate,
+          "show_on_home": showOnHome,
+          "icon_path": iconPath,
+        }),
+      );
+      return handleResponse(response);
+    } catch (e) {
+      return handleError(e);
+    }
+  }
+
+  Future<Map<String, dynamic>> deleteNotebook(String notebookId) async {
+    try {
+      final response = await http.delete(
+        Uri.parse("${ApiConstants.baseUrl}/notebooks/$notebookId"),
+        headers: await getHeaders(isAuth: true),
+      );
+      return handleResponse(response);
+    } catch (e) {
+      return handleError(e);
+    }
   }
 }

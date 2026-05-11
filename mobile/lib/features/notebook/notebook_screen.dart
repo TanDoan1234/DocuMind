@@ -3,54 +3,73 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:documind_mobile/core/app_colors.dart';
 import 'package:documind_mobile/features/notebook/create_notebook_screen.dart';
 import 'package:documind_mobile/features/notebook/notebook_detail_screen.dart';
+import 'package:documind_mobile/core/api_service.dart';
+import 'package:shimmer/shimmer.dart';
 
 class NotebookScreen extends StatefulWidget {
-  const NotebookScreen({super.key});
+  final VoidCallback? onNotebookCreated;
+  const NotebookScreen({super.key, this.onNotebookCreated});
 
   @override
   State<NotebookScreen> createState() => _NotebookScreenState();
 }
 
 class _NotebookScreenState extends State<NotebookScreen> {
-  int _currentIndex = 1;
+  final ApiService _apiService = ApiService();
+  List<Map<String, dynamic>> _notebooks = [];
+  bool _isLoading = true;
+  String? _errorMessage;
   String _selectedFilter = "Tất cả";
 
   final List<String> _filters = ["Tất cả", "Học tập", "Dự án", "Nghiên cứu", "Cá nhân"];
 
-  final List<Map<String, dynamic>> _notebooks = [
-    {
-      "title": "Học tập",
-      "count": 12,
-      "desc": "Ghi chú các môn học và tài liệu ôn tập",
-      "status": "Riêng tư",
-      "color": const Color(0xFFE0F2F1),
-      "icon": "assets/icons/categories/icon-category-study.png"
-    },
-    {
-      "title": "Dự án",
-      "count": 6,
-      "desc": "Kế hoạch, ý tưởng và nhiệm vụ dự án",
-      "status": "Riêng tư",
-      "color": const Color(0xFFE3F2FD),
-      "icon": "assets/icons/categories/icon-category-project.png"
-    },
-    {
-      "title": "Nghiên cứu",
-      "count": 8,
-      "desc": "Tài liệu nghiên cứu, bài báo, nguồn tham khảo",
-      "status": "Riêng tư",
-      "color": const Color(0xFFFFF3E0),
-      "icon": "assets/icons/categories/icon-category-research.png"
-    },
-    {
-      "title": "Cá nhân",
-      "count": 5,
-      "desc": "Nhật ký, mục tiêu và những điều yêu thích",
-      "status": "Riêng tư",
-      "color": const Color(0xFFFCE4EC),
-      "icon": "assets/icons/categories/icon-category-personal.png"
-    },
-  ];
+  @override
+  void initState() {
+    super.initState();
+    _fetchNotebooks();
+  }
+
+  Future<void> _fetchNotebooks() async {
+    setState(() {
+      _isLoading = true;
+      _errorMessage = null;
+    });
+
+    final result = await _apiService.getNotebooks();
+
+    if (mounted) {
+      if (result["success"]) {
+        final List<dynamic> data = result["data"];
+        setState(() {
+          _notebooks = data.map((item) {
+            return {
+              "id": item["notebook_id"],
+              "title": item["title"],
+              "count": 0,
+              "desc": "Chưa có mô tả",
+              "status": item["is_private"] == true ? "Riêng tư" : "Công khai",
+              "color": const Color(0xFFF1F8F7),
+              "icon": item["icon_path"] ?? _getCategoryIcon(item["title"]),
+            };
+          }).toList();
+          _isLoading = false;
+        });
+      } else {
+        setState(() {
+          _errorMessage = result["message"];
+          _isLoading = false;
+        });
+      }
+    }
+  }
+
+
+  String _getCategoryIcon(String title) {
+    if (title.contains("Học")) return "assets/icons/categories/icon-category-study.png";
+    if (title.contains("Dự")) return "assets/icons/categories/icon-category-project.png";
+    if (title.contains("Cá")) return "assets/icons/categories/icon-category-personal.png";
+    return "assets/icons/categories/icon-category-research.png";
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -63,19 +82,33 @@ class _NotebookScreenState extends State<NotebookScreen> {
           _buildFilterChips(),
           const SizedBox(height: 16),
           Expanded(
-            child: ListView.builder(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-              itemCount: _notebooks.length,
-              physics: const BouncingScrollPhysics(),
-              itemBuilder: (context, index) {
-                return _buildNotebookCard(_notebooks[index]);
-              },
-            ),
+            child: _isLoading 
+              ? _buildShimmerLoading()
+              : _errorMessage != null
+                ? _buildErrorState()
+                : _notebooks.isEmpty
+                  ? _buildEmptyState()
+                  : RefreshIndicator(
+                      onRefresh: _fetchNotebooks,
+                      child: ListView.builder(
+                        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                        itemCount: _getFilteredNotebooks().length,
+                        physics: const AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
+                        itemBuilder: (context, index) {
+                          return _buildNotebookCard(_getFilteredNotebooks()[index]);
+                        },
+                      ),
+                    ),
           ),
         ],
       ),
       bottomNavigationBar: _buildCustomBottomNav(),
     );
+  }
+
+  List<Map<String, dynamic>> _getFilteredNotebooks() {
+    if (_selectedFilter == "Tất cả") return _notebooks;
+    return _notebooks.where((notebook) => notebook["title"].contains(_selectedFilter)).toList();
   }
 
   PreferredSizeWidget _buildAppBar() {
@@ -98,11 +131,18 @@ class _NotebookScreenState extends State<NotebookScreen> {
         ),
         IconButton(
           icon: const Icon(Icons.add_rounded, color: AppColors.textDark, size: 28),
-          onPressed: () {
-            Navigator.push(
+          onPressed: () async {
+            final result = await Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => const CreateNotebookScreen()),
             );
+            
+            if (result == true) {
+              _fetchNotebooks();
+              if (widget.onNotebookCreated != null) {
+                widget.onNotebookCreated!();
+              }
+            }
           },
         ),
         const SizedBox(width: 8),
@@ -155,7 +195,8 @@ class _NotebookScreenState extends State<NotebookScreen> {
           MaterialPageRoute(
             builder: (context) => NotebookDetailScreen(
               notebookTitle: notebook['title'],
-              themeColor: notebook['color'],
+              iconPath: notebook['icon'],
+              themeColor: notebook['color'] as Color,
             ),
           ),
         );
@@ -179,17 +220,8 @@ class _NotebookScreenState extends State<NotebookScreen> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             
-            Container(
-              width: 100,
-              height: 100,
-              decoration: BoxDecoration(
-                color: notebook["color"],
-                borderRadius: BorderRadius.circular(20),
-              ),
-              child: Center(
-                child: Image.asset(notebook["icon"], width: 60, height: 60, fit: BoxFit.contain),
-              ),
-            ),
+            // Hiển thị icon trực tiếp không cần khối và màu nền
+            Image.asset(notebook["icon"], width: 80, height: 80, fit: BoxFit.contain),
             const SizedBox(width: 16),
             
             Expanded(
@@ -285,15 +317,79 @@ class _NotebookScreenState extends State<NotebookScreen> {
     );
   }
 
+  Widget _buildShimmerLoading() {
+    return ListView.builder(
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+      itemCount: 4,
+      itemBuilder: (context, index) {
+        return Shimmer.fromColors(
+          baseColor: Colors.grey.shade100,
+          highlightColor: Colors.white,
+          child: Container(
+            margin: const EdgeInsets.only(bottom: 20),
+            height: 130,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(24),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildEmptyState() {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Image.asset("assets/mascot/mascot-owl-avatar-circle.png", width: 120, opacity: const AlwaysStoppedAnimation(0.5)),
+          const SizedBox(height: 24),
+          Text(
+            "Chưa có sổ tay nào",
+            style: GoogleFonts.outfit(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.grey),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            "Bấm nút + để tạo sổ tay đầu tiên",
+            style: GoogleFonts.inter(fontSize: 14, color: Colors.grey.shade400),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildErrorState() {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const Icon(Icons.error_outline_rounded, size: 60, color: Colors.redAccent),
+          const SizedBox(height: 16),
+          Text(
+            "Lỗi kết nối",
+            style: GoogleFonts.outfit(fontSize: 18, fontWeight: FontWeight.bold),
+          ),
+          const SizedBox(height: 8),
+          Text(_errorMessage ?? "Đã có lỗi xảy ra"),
+          const SizedBox(height: 24),
+          ElevatedButton(
+            onPressed: _fetchNotebooks,
+            child: const Text("Thử lại"),
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget _buildNavItem(int index, String iconPath, String label) {
-    bool isActive = _currentIndex == index;
+    bool isActive = 1 == index; // Notebook is fixed at index 1
     return GestureDetector(
       onTap: () {
         if (index == 0) {
-          
           Navigator.pop(context);
-        } else {
-          setState(() => _currentIndex = index);
+        } else if (index == 3) {
+          // Navigate to Profile if needed
         }
       },
       behavior: HitTestBehavior.opaque,

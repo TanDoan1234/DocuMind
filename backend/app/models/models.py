@@ -21,6 +21,9 @@ class Notebook(SQLModel, table=True):
     notebook_id: uuid.UUID = Field(default_factory=uuid.uuid4, primary_key=True)
     user_id: uuid.UUID = Field(foreign_key="users.user_id")
     title: str
+    is_private: bool = Field(default=True)
+    show_on_home: bool = Field(default=True)
+    icon_path: Optional[str] = Field(default=None)
     created_at: datetime = Field(default_factory=datetime.utcnow)
     
     # Relationships

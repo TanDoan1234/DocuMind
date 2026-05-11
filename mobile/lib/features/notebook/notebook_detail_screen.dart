@@ -6,11 +6,13 @@ import 'package:documind_mobile/features/ai/summary_screen.dart';
 
 class NotebookDetailScreen extends StatefulWidget {
   final String notebookTitle;
+  final String? iconPath;
   final Color themeColor;
 
   const NotebookDetailScreen({
     super.key, 
     required this.notebookTitle, 
+    this.iconPath,
     this.themeColor = const Color(0xFFE0F2F1),
   });
 
@@ -50,9 +52,18 @@ class _NotebookDetailScreenState extends State<NotebookDetailScreen> {
         icon: const Icon(Icons.arrow_back_ios_new_rounded, color: AppColors.textDark, size: 22),
         onPressed: () => Navigator.pop(context),
       ),
-      title: Text(
-        widget.notebookTitle,
-        style: GoogleFonts.outfit(fontSize: 20, fontWeight: FontWeight.bold, color: AppColors.textDark),
+      title: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          if (widget.iconPath != null) ...[
+            Image.asset(widget.iconPath!, width: 24, height: 24, fit: BoxFit.contain),
+            const SizedBox(width: 8),
+          ],
+          Text(
+            widget.notebookTitle,
+            style: GoogleFonts.outfit(fontSize: 20, fontWeight: FontWeight.bold, color: AppColors.textDark),
+          ),
+        ],
       ),
       centerTitle: true,
       actions: [

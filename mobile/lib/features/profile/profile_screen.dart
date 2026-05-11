@@ -15,7 +15,14 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreenState extends State<ProfileScreen> {
   final ApiService _apiService = ApiService();
   String _fullName = "Người dùng";
-  bool _isLoggingOut = false; // Trạng thái đang đăng xuất
+  bool _isLoggingOut = false;
+
+  String _getShortName(String name) {
+    if (name == "Người dùng") return name;
+    List<String> parts = name.split(" ").where((s) => s.isNotEmpty).toList();
+    if (parts.length <= 2) return name;
+    return "${parts[parts.length - 2]} ${parts[parts.length - 1]}";
+  }
 
   @override
   void initState() {
@@ -24,10 +31,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Future<void> _loadUserData() async {
-    final name = await _apiService.getUserName();
-    if (mounted) {
+    final result = await _apiService.getProfile();
+    if (mounted && result["success"]) {
       setState(() {
-        if (name != null) _fullName = name;
+        final String? name = result["data"]["full_name"];
+        if (name != null) {
+          _fullName = _getShortName(name);
+        }
       });
     }
   }
@@ -102,26 +112,30 @@ class _ProfileScreenState extends State<ProfileScreen> {
           fit: BoxFit.contain,
         ),
         const SizedBox(width: 24),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              _fullName,
-              style: GoogleFonts.outfit(
-                fontSize: 32,
-                fontWeight: FontWeight.bold,
-                color: AppColors.textDark,
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                _fullName,
+                style: GoogleFonts.outfit(
+                  fontSize: 32,
+                  fontWeight: FontWeight.bold,
+                  color: AppColors.textDark,
+                ),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
               ),
-            ),
-            const SizedBox(height: 4),
-            Text(
-              "Thành viên DocuMind",
-              style: GoogleFonts.inter(
-                fontSize: 16,
-                color: const Color(0xFF64748B), // Slate Gray from guide
+              const SizedBox(height: 4),
+              Text(
+                "Thành viên DocuMind",
+                style: GoogleFonts.inter(
+                  fontSize: 16,
+                  color: const Color(0xFF64748B), // Slate Gray from guide
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ],
     );
