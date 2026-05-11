@@ -34,12 +34,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   void _handleLogout() async {
     setState(() => _isLoggingOut = true);
-    
+
     // Giả lập độ trễ 1.5s cho mượt mà
     await Future.delayed(const Duration(milliseconds: 1500));
-    
+
     await _apiService.logout();
-    
+
     if (mounted) {
       Navigator.pushAndRemoveUntil(
         context,
@@ -52,23 +52,42 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: AppColors.background,
       body: SafeArea(
         child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 24),
+          padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const SizedBox(height: 20),
+              const SizedBox(height: 24),
               _buildHeader(),
+              const SizedBox(height: 16), // Reduced from 32
+
+              // Thống kê Section
+              _buildSectionTitle("Thống kê học tập"),
               const SizedBox(height: 16),
               _buildStatsGrid(),
+              const SizedBox(height: 32),
+
+              // Cài đặt Section
+              _buildSectionTitle("Tài khoản & Tùy chọn"),
               const SizedBox(height: 16),
               _buildMenuSection(context),
-              const SizedBox(height: 100),
+              const SizedBox(height: 40),
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _buildSectionTitle(String title) {
+    return Text(
+      title,
+      style: GoogleFonts.outfit(
+        fontSize: 18,
+        fontWeight: FontWeight.bold,
+        color: AppColors.textDark,
       ),
     );
   }
@@ -78,18 +97,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
       children: [
         Image.asset(
           "assets/mascot/mascot-owl-avatar-circle.png",
-          width: 100,
-          height: 100,
+          width: 120,
+          height: 120,
           fit: BoxFit.contain,
         ),
-        const SizedBox(width: 20),
+        const SizedBox(width: 24),
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
               _fullName,
               style: GoogleFonts.outfit(
-                fontSize: 24,
+                fontSize: 32,
                 fontWeight: FontWeight.bold,
                 color: AppColors.textDark,
               ),
@@ -98,8 +117,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
             Text(
               "Thành viên DocuMind",
               style: GoogleFonts.inter(
-                fontSize: 14,
-                color: Colors.grey.shade500,
+                fontSize: 16,
+                color: const Color(0xFF64748B), // Slate Gray from guide
               ),
             ),
           ],
@@ -112,35 +131,47 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        _buildStatItem("0", "Sổ tay"),
-        _buildStatItem("0", "Ghi chú"),
-        _buildStatItem("0h", "Thời gian"),
+        _buildStatItem("0", "Sổ tay", Icons.book_outlined,
+            AppColors.categoryStudy, AppColors.primary),
+        _buildStatItem("0", "Ghi chú", Icons.note_alt_outlined,
+            AppColors.categoryProject, Colors.blue),
+        _buildStatItem("0h", "Thời gian", Icons.access_time,
+            AppColors.categoryPersonal, Colors.orange),
       ],
     );
   }
 
-  Widget _buildStatItem(String value, String label) {
+  Widget _buildStatItem(String value, String label, IconData icon,
+      Color bgColor, Color iconColor) {
     return Container(
-      width: 100,
-      padding: const EdgeInsets.symmetric(vertical: 16),
+      width: 105,
+      padding: const EdgeInsets.symmetric(vertical: 20),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: Colors.grey.shade100),
+        borderRadius: BorderRadius.circular(24),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.02),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
+            color: Colors.black.withValues(alpha: 0.03),
+            blurRadius: 20,
+            offset: const Offset(0, 10),
           ),
         ],
       ),
       child: Column(
         children: [
+          Container(
+            padding: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              color: bgColor,
+              shape: BoxShape.circle,
+            ),
+            child: Icon(icon, size: 20, color: iconColor),
+          ),
+          const SizedBox(height: 12),
           Text(
             value,
             style: GoogleFonts.outfit(
-              fontSize: 20,
+              fontSize: 22,
               fontWeight: FontWeight.bold,
               color: AppColors.textDark,
             ),
@@ -149,8 +180,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
           Text(
             label,
             style: GoogleFonts.inter(
-              fontSize: 12,
-              color: Colors.grey.shade500,
+              fontSize: 13,
+              color: const Color(0xFF64748B),
             ),
           ),
         ],
@@ -159,20 +190,62 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Widget _buildMenuSection(BuildContext context) {
-    return Column(
-      children: [
-        _buildMenuItem(Icons.cloud_outlined, "Dữ liệu của tôi"),
-        _buildMenuItem(Icons.settings_outlined, "Cài đặt", onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => const SettingsScreen()),
-          );
-        }),
-        _buildMenuItem(Icons.language_outlined, "Ngôn ngữ", trailing: "Tiếng Việt"),
-        _buildMenuItem(Icons.dark_mode_outlined, "Chế độ", trailing: "Sáng"),
-        const SizedBox(height: 20),
-        _buildLogoutItem(),
-      ],
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(28),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.03),
+            blurRadius: 20,
+            offset: const Offset(0, 8),
+          ),
+        ],
+      ),
+      padding: const EdgeInsets.all(12),
+      child: Column(
+        children: [
+          _buildMenuItem(
+            Icons.cloud_outlined,
+            "Dữ liệu của tôi",
+            iconBg: AppColors.categoryStudy,
+            iconColor: AppColors.primary,
+          ),
+          _buildDivider(),
+          _buildMenuItem(
+            Icons.settings_outlined,
+            "Cài đặt",
+            iconBg: AppColors.categoryProject,
+            iconColor: Colors.blue,
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const SettingsScreen()),
+              );
+            },
+          ),
+          _buildDivider(),
+          _buildMenuItem(
+            Icons.language_outlined,
+            "Ngôn ngữ",
+            iconBg: AppColors.categoryPersonal,
+            iconColor: Colors.orange,
+            trailing: "Tiếng Việt",
+          ),
+          const SizedBox(height: 12),
+          _buildLogoutItem(),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildDivider() {
+    return Divider(
+      height: 1,
+      thickness: 1,
+      color: Colors.grey.shade50,
+      indent: 60,
+      endIndent: 12,
     );
   }
 
@@ -182,7 +255,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 16),
         decoration: BoxDecoration(
-          color: Colors.red.withValues(alpha: 0.05),
+          color: const Color(0xFFFFF1F2),
           borderRadius: BorderRadius.circular(16),
         ),
         child: Row(
@@ -214,23 +287,33 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  Widget _buildMenuItem(IconData icon, String title, {String? trailing, VoidCallback? onTap}) {
-    return GestureDetector(
+  Widget _buildMenuItem(IconData icon, String title,
+      {Color? iconBg,
+      Color? iconColor,
+      String? trailing,
+      VoidCallback? onTap}) {
+    return InkWell(
       onTap: onTap,
+      borderRadius: BorderRadius.circular(20),
       child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 16),
-        decoration: BoxDecoration(
-          border: Border(bottom: BorderSide(color: Colors.grey.shade50, width: 1)),
-        ),
+        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
         child: Row(
           children: [
-            Icon(icon, size: 24, color: Colors.grey.shade700),
+            Container(
+              padding: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                color: iconBg ?? const Color(0xFFF1F5F9),
+                shape: BoxShape.circle,
+              ),
+              child: Icon(icon,
+                  size: 22, color: iconColor ?? const Color(0xFF64748B)),
+            ),
             const SizedBox(width: 16),
             Text(
               title,
               style: GoogleFonts.inter(
-                fontSize: 16,
-                fontWeight: FontWeight.w500,
+                fontSize: 15,
+                fontWeight: FontWeight.w600,
                 color: AppColors.textDark,
               ),
             ),
@@ -238,10 +321,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
             if (trailing != null)
               Text(
                 trailing,
-                style: GoogleFonts.inter(fontSize: 14, color: Colors.grey.shade400),
+                style: GoogleFonts.inter(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                  color: const Color(0xFF64748B),
+                ),
               ),
-            const SizedBox(width: 8),
-            Icon(Icons.chevron_right_rounded, size: 20, color: Colors.grey.shade400),
+            const SizedBox(width: 4),
+            const Icon(Icons.chevron_right_rounded,
+                size: 22, color: Color(0xFFCBD5E1)),
           ],
         ),
       ),
