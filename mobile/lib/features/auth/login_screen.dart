@@ -7,6 +7,7 @@ import 'package:documind_mobile/core/api_service.dart';
 import 'package:documind_mobile/shared/utils/notification_service.dart';
 import 'package:documind_mobile/core/app_strings.dart';
 import 'register_screen.dart';
+import 'forgot_password_screen.dart';
 import '../home/home_screen.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -184,7 +185,14 @@ class _LoginScreenState extends State<LoginScreen> {
         Align(
           alignment: Alignment.centerRight,
           child: TextButton(
-            onPressed: () {},
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const ForgotPasswordScreen(),
+                ),
+              );
+            },
             child: Text("Quên mật khẩu?",
                 style: GoogleFonts.inter(
                     color: AppColors.primary,

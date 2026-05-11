@@ -22,7 +22,10 @@ class CustomTextField extends StatelessWidget {
     this.borderRadius = 20,
     this.fontSize = 14,
     this.controller,
+    this.keyboardType = TextInputType.text,
   });
+
+  final TextInputType keyboardType;
 
   @override
   Widget build(BuildContext context) {
@@ -40,6 +43,7 @@ class CustomTextField extends StatelessWidget {
       ),
       child: TextField(
         controller: controller,
+        keyboardType: keyboardType,
         obscureText: isPassword && !isPasswordVisible,
         style: TextStyle(fontSize: fontSize),
         decoration: InputDecoration(
