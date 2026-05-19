@@ -9,7 +9,8 @@ import 'package:easy_localization/easy_localization.dart';
 
 class NotebookScreen extends StatefulWidget {
   final VoidCallback? onNotebookCreated;
-  const NotebookScreen({super.key, this.onNotebookCreated});
+  final VoidCallback? onBackToHome;
+  const NotebookScreen({super.key, this.onNotebookCreated, this.onBackToHome});
 
   @override
   State<NotebookScreen> createState() => _NotebookScreenState();
@@ -103,7 +104,6 @@ class _NotebookScreenState extends State<NotebookScreen> {
           ),
         ],
       ),
-      bottomNavigationBar: _buildCustomBottomNav(),
     );
   }
 
@@ -119,7 +119,13 @@ class _NotebookScreenState extends State<NotebookScreen> {
       elevation: 0,
       leading: IconButton(
         icon: const Icon(Icons.arrow_back_ios_new_rounded, color: AppColors.textDark, size: 22),
-        onPressed: () => Navigator.pop(context),
+        onPressed: () {
+          if (Navigator.canPop(context)) {
+            Navigator.pop(context);
+          } else if (widget.onBackToHome != null) {
+            widget.onBackToHome!();
+          }
+        },
       ),
       title: Text(
         "nav.notebook".tr(),
@@ -273,53 +279,6 @@ class _NotebookScreenState extends State<NotebookScreen> {
     );
   }
 
-  Widget _buildCustomBottomNav() {
-    return Container(
-      height: 95,
-      decoration: BoxDecoration(
-        color: Colors.white,
-        boxShadow: [
-          BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 20, offset: const Offset(0, -5))
-        ],
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: [
-          Expanded(child: _buildNavItem(0, "assets/icons/navigations/icon-nav-home-outline.png", "nav.home".tr())),
-          Expanded(child: _buildNavItem(1, "assets/icons/navigations/icon-nav-notebook-outline.png", "nav.notebook".tr())),
-          
-          
-          Expanded(
-            child: Center(
-              child: Container(
-                width: 60,
-                height: 60,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  gradient: const LinearGradient(colors: [AppColors.primary, Color(0xFF4DB6AC)]),
-                  boxShadow: [
-                    BoxShadow(color: AppColors.primary.withValues(alpha: 0.3), blurRadius: 12, offset: const Offset(0, 4))
-                  ],
-                ),
-                child: Center(
-                  child: Image.asset(
-                    "assets/icons/navigations/icon-nav-plus-outline.png", 
-                    width: 30, 
-                    height: 30, 
-                    color: Colors.white,
-                  ),
-                ),
-              ),
-            ),
-          ),
-          
-          Expanded(child: _buildNavItem(2, "assets/icons/navigations/icon-nav-ai-outline.png", "nav.ai".tr())),
-          Expanded(child: _buildNavItem(3, "assets/icons/navigations/icon-nav-profile-outline.png", "nav.profile".tr())),
-        ],
-      ),
-    );
-  }
-
   Widget _buildShimmerLoading() {
     return ListView.builder(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
@@ -385,41 +344,5 @@ class _NotebookScreenState extends State<NotebookScreen> {
     );
   }
 
-  Widget _buildNavItem(int index, String iconPath, String label) {
-    bool isActive = 1 == index; // Notebook is fixed at index 1
-    return GestureDetector(
-      onTap: () {
-        if (index == 0) {
-          Navigator.pop(context);
-        } else if (index == 3) {
-          // Navigate to Profile if needed
-        }
-      },
-      behavior: HitTestBehavior.opaque,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Opacity(
-            opacity: isActive ? 1.0 : 0.5,
-            child: Image.asset(
-              iconPath, 
-              width: 36,
-              height: 36, 
-              fit: BoxFit.contain,
-            ),
-          ),
-          const SizedBox(height: 2),
-          Text(
-            label,
-            style: GoogleFonts.inter(
-              fontSize: 12,
-              color: isActive ? AppColors.primary : Colors.grey.shade400,
-              fontWeight: isActive ? FontWeight.bold : FontWeight.normal,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
+
 }
