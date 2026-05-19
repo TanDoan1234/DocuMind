@@ -124,8 +124,13 @@ class _HomeScreenState extends State<HomeScreen> {
         index: _currentIndex,
         children: [
           _buildHomeContent(context),
-          NotebookScreen(onNotebookCreated: _loadInitialData),
-          const AIChatScreen(),
+          NotebookScreen(
+            onNotebookCreated: _loadInitialData,
+            onBackToHome: () => setState(() => _currentIndex = 0),
+          ),
+          AIChatScreen(
+            onBackToHome: () => setState(() => _currentIndex = 0),
+          ),
           const ProfileScreen(),
         ],
       ),

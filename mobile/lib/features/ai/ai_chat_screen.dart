@@ -6,8 +6,9 @@ import 'package:easy_localization/easy_localization.dart';
 class AIChatScreen extends StatefulWidget {
   final String? notebookId;
   final String? notebookTitle;
+  final VoidCallback? onBackToHome;
 
-  const AIChatScreen({super.key, this.notebookId, this.notebookTitle});
+  const AIChatScreen({super.key, this.notebookId, this.notebookTitle, this.onBackToHome});
 
   @override
   State<AIChatScreen> createState() => _AIChatScreenState();
@@ -39,7 +40,13 @@ class _AIChatScreenState extends State<AIChatScreen> {
       elevation: 0.5,
       leading: IconButton(
         icon: const Icon(Icons.arrow_back_ios_new_rounded, color: AppColors.textDark, size: 22),
-        onPressed: () => Navigator.pop(context),
+        onPressed: () {
+          if (Navigator.canPop(context)) {
+            Navigator.pop(context);
+          } else if (widget.onBackToHome != null) {
+            widget.onBackToHome!();
+          }
+        },
       ),
       title: Text(
         widget.notebookTitle != null ? "AI: ${widget.notebookTitle}" : "ai.title".tr(),
